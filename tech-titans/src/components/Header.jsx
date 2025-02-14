@@ -5,7 +5,6 @@ import { IoIosMenu, IoIosClose } from "react-icons/io";
 
 function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [events, setEvents] = useState(allEvents || []); // Assurez-vous que events est un tableau
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -27,20 +26,21 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
     };
   }, []);
 
-  // Filtrer les événements selon la recherche
-  const filteredEvents = events.filter((event) =>
-    event && event.title.toLowerCase().includes(searchQuery.toLowerCase()) // Vérifiez que event n'est pas undefined
+  const eventsArray = Array.isArray(allEvents) ? allEvents : [];
+
+  const filteredEvents = eventsArray.filter((event) =>
+    event && event.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleLogout = () => {
-    // Supprimer le cookie lors de la déconnexion
-    document.cookie = 'auth_token=; Max-Age=0'; // Supprimer le cookie
+    document.cookie = 'auth_token=; Max-Age=0'; 
     navigate("/");
     setIsLoggedIn(false);
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
+    console.log(filteredEvents);
     if (searchQuery.trim() === "") {
       return;
     }
