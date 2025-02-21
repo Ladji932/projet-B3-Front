@@ -2,30 +2,16 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const EventAdminInterface = () => {
-  const [events, setEvents] = useState([]);
+const GeneralAdminInterface = ({fetchEvents , allEvents , setEvents}) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get('https://projet-b3.onrender.com/api/fetch-events');
-        setEvents(response.data.events);
-        console.log(response.data.events);
-      } catch (err) {
-        setError('Impossible de récupérer les événements.');
-        console.error(err);
-      }
-    };
-
-    fetchEvents();
-  }, []);
 
   const deleteEvent = async (eventId) => {
     try {
-      await axios.delete(`https://projet-b3.onrender.com/api/user/${eventId}`);
-      setEvents(events.filter(event => event._id !== eventId));
+      await axios.delete(`http://localhost:3002/api/user/${eventId}`);
+      setEvents(allEvents.filter(event => event._id !== eventId));
+      fetchEvents()
       setSuccess('Événement supprimé avec succès.');
     } catch (err) {
       setError('Erreur lors de la suppression de l\'événement.');
@@ -62,11 +48,11 @@ const EventAdminInterface = () => {
         </div>
       )}
 
-      {events.length === 0 ? (
+      {allEvents.length === 0 ? (
         <p className="text-center text-lg text-gray-500">Aucun événement à afficher pour le moment.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {events.map(event => (
+          {allEvents.map(event => (
             <div 
               key={event._id} 
               className="bg-white rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105"
@@ -108,4 +94,4 @@ const EventAdminInterface = () => {
   );
 };
 
-export default EventAdminInterface;
+export default GeneralAdminInterface;

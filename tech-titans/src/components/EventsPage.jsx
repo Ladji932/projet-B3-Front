@@ -142,8 +142,8 @@ function EventsPage({ allEvents }) {
     setActionLoading(true);
     const url =
       actionType === "participate"
-        ? `https://projet-b3.onrender.com/api/participate/${userId}/${event._id}`
-        : `https://projet-b3.onrender.com/api/withdraw/${userId}/${event._id}`;
+        ? `http://localhost:3002/api/participate/${userId}/${event._id}`
+        : `http://localhost:3002/api/withdraw/${userId}/${event._id}`;
         
     try {
       const response = await axios.post(url, {}, { headers: { Authorization: `Bearer ${authToken}` } });

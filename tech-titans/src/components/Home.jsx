@@ -7,22 +7,23 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-function Home({ allEvents, isLoggedIn, setIsLoggedIn }) {
+function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) {
+
+  console.log(allEvents)
+
   const [userEvents, setUserEvents] = useState([]);
   const [popup, setPopup] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
-  const getCookie = name => {
-    const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-    return match ? match[2] : null;
-  };
-  const authToken = getCookie("auth_token");
 
+
+
+  const authToken = getCookie("auth_token");
 
 
   const fetchUserEvents = async () => {
     if (authToken) {
       try {
-        const response = await axios.get("https://projet-b3.onrender.com/api/user-events", {
+        const response = await axios.get("http://localhost:3002/api/user-events", {
           headers: { Authorization: `Bearer ${authToken}` },
           withCredentials: true,
         });
@@ -55,10 +56,10 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn }) {
         fetchUserEvents();
     };
   
+  
     fetchUserEvents();
     window.addEventListener("storage", handleStorageChange);
-  
-  
+    
     return () => {
         window.removeEventListener("storage", handleStorageChange);
     };
@@ -79,14 +80,14 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn }) {
 
   const confirmAction = async () => {
     if (!popup) return;
-
+  
     const { event, type } = popup;
     if (!authToken) {
       console.log("Utilisateur non identifié. Veuillez vous connecter.");
       closePopup();
       return;
     }
-
+  
     let userId;
     try {
       const decodedToken = jwtDecode(authToken);
@@ -96,17 +97,19 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn }) {
       closePopup();
       return;
     }
-
+  
     setActionLoading(true);
     try {
       const url =
         type === "participate"
-          ? `https://projet-b3.onrender.com/api/participate/${userId}/${event._id}`
-          : `https://projet-b3.onrender.com/api/withdraw/${userId}/${event._id}`;
-
+          ? `http://localhost:3002/api/participate/${userId}/${event._id}`
+          : `http://localhost:3002/api/withdraw/${userId}/${event._id}`;
+  
       const response = await axios.post(url);
       console.log(response.data.message);
-      await fetchUserEvents();
+  
+      await fetchUserEvents(); // Met à jour les événements auxquels l'utilisateur participe
+      await fetchEvents(); // Rafraîchit tous les événements pour mettre à jour le nombre de participants
     } catch (err) {
       console.error("Erreur lors de l'action :", err);
       console.log("Une erreur est survenue lors de l'action.");
@@ -115,7 +118,7 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn }) {
       closePopup();
     }
   };
-
+  
   const settings = {
     infinite: allEvents.length > 3, 
     speed: 1000,
@@ -135,8 +138,8 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn }) {
       {popup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-sm w-full">
-            <img src={popup.event.image} alt="" />
-            <h3 className="text-lg font-bold">
+          <img src={popup.event.image} alt="" className="w-[100%] h-[30%] object-cover" />
+          <h3 className="text-lg font-bold">
               {popup.type === "participate"
                 ? "Confirmer la participation"
                 : "Confirmer le désistement"}

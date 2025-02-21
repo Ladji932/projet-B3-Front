@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import { useEffect, useState } from 'react'; 
+import { useEffect, useState, useCallback } from 'react'; 
 import Header from './components/Header';
 import Home from './components/Home';
 import Login from './components/Login';
@@ -10,9 +10,10 @@ import AdminPage from './components/AdminPage';
 import ResultsPage from './components/ResultsPage';
 import CreateEventForm from './components/CreateEvent';
 import axios from 'axios';
-import EventAdminInterface from './components/GeneralAdminInterface';
+import GeneralAdminInterface from './components/GeneralAdminInterface';
 import AdminLogin from './components/AdminLogin';
 import Cookies from "js-cookie";
+import EditEvent from './components/EditEvent';
 
 function ProtectedRoute({ element, requiresAuthCheck = false, redirectTo = "/login" }) {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -25,7 +26,7 @@ function ProtectedRoute({ element, requiresAuthCheck = false, redirectTo = "/log
 
     const checkAuth = async () => {
       try {
-        await axios.get("https://projet-b3.onrender.com/api/checkAuth", { withCredentials: true });
+        await axios.get("http://localhost:3002/api/checkAuth", { withCredentials: true });
         setIsAuthenticated(true);
       } catch {
         setIsAuthenticated(false);
@@ -34,34 +35,35 @@ function ProtectedRoute({ element, requiresAuthCheck = false, redirectTo = "/log
     checkAuth();
   }, [requiresAuthCheck]);
 
-  if (isAuthenticated === null) return <div>Chargement...</div>;
+  if (isAuthenticated === null) return <div>Pas connecté</div>;
 
   return isAuthenticated ? element : <Navigate to={redirectTo} replace />;
 }
-
-
 
 function Root() {
   const [AllEvents, setEvents] = useState([]);
   const [cookiesAccepted, setCookiesAccepted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get("https://projet-b3.onrender.com/api/fetch-events");
-        const shuffledEvents = response.data.events.sort(() => 0.5 - Math.random());
-        setEvents(shuffledEvents);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchEvents();
+  const fetchEvents = useCallback(async () => {
+    try {
+      const response = await axios.get("http://localhost:3002/api/fetch-events");
+      const shuffledEvents = response.data.events.sort(() => 0.5 - Math.random());
+      setEvents(shuffledEvents);
+      console.log(AllEvents)
+    } catch (err) {
+      console.error(err);
+    }
   }, []);
 
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
 
-
+  const getCookie = name => {
+    const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+    return match ? match[2] : null;
+  };
 
   const acceptCookies = () => setCookiesAccepted(true);
   const declineCookies = () => setCookiesAccepted(true);
@@ -69,17 +71,18 @@ function Root() {
   return (
     <BrowserRouter>
       <div>
-      <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} allEvents={AllEvents} />
+        <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} allEvents={AllEvents} />
         <Routes>
-          <Route path="/" element={<Home allEvents={AllEvents} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/" element={<Home allEvents={AllEvents} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} getCookie={getCookie} fetchEvents={fetchEvents}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/inscription" element={<Signup />} />
           <Route path="/AllEvent" element={<EventsPage allEvents={AllEvents} />} />
           <Route path="/userDetails" element={<AdminPage />} />
           <Route path="/results" element={<ResultsPage />} />
-          <Route path="/addEvent" element={<ProtectedRoute element={<CreateEventForm />} />} />
-          <Route path="/admin" element={<ProtectedRoute element={<EventAdminInterface />} requiresAuthCheck={true} redirectTo="/adminLogin" />} />
+          <Route path="/addEvent" element={<ProtectedRoute element={<CreateEventForm getCookie={getCookie} fetchEvents={fetchEvents} /> } />} />
+          <Route path="/admin" element={<ProtectedRoute element={<GeneralAdminInterface allEvents={AllEvents} setEvents={setEvents} fetchEvents={fetchEvents} />} requiresAuthCheck={true} redirectTo="/adminLogin" />} />
           <Route path="/adminLogin" element={<AdminLogin />} />
+          <Route path="/edit-event/:eventId" element={<EditEvent fetchEvents={fetchEvents} />} /> 
         </Routes>
 
         {!cookiesAccepted && (

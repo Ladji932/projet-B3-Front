@@ -12,7 +12,7 @@ const AdminLogin = () => {
 
     try {
       const response = await axios.post(
-        "https://projet-b3.onrender.com/api/adminLogin",
+        "http://localhost:3002/api/adminLogin",
         { email, password },
         { withCredentials: true } // 👈 Envoie les cookies
       );

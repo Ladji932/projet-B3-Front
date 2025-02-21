@@ -1,84 +1,43 @@
-/* eslint-disable react/no-unescaped-entities */
-import { useState } from 'react';
-import axios from 'axios';
+import { useState } from "react";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
-const CreateEventForm = () => {
+const CreateEventForm = ({ getCookie , fetchEvents }) => {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    category: '',
+    title: "",
+    description: "",
+    category: "",
     dateCreated: Date.now(),
-    dateEvent: '',
-    location: '',
+    dateEvent: "",
+    location: "",
     image: null,
-    email: '',
-    phone: '',
-    createdBy: '',
   });
 
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const [locationSuggestions, setLocationSuggestions] = useState([]);
-  const [locationError, setLocationError] = useState('');
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
 
-  const handleLocationChange = async (e) => {
-    const input = e.target.value;
-    setFormData({ ...formData, location: input });
-    setLocationError('');
-
-    if (input.length > 1) {
-      const apiKey = 'b399e41caa67f6b206289cb4633f94af';
-
-      try {
-        const response = await axios.get(`http://api.positionstack.com/v1/forward`, {
-          params: {
-            access_key: apiKey,
-            query: input,
-          },
-        });
-
-        if (response.data.data && response.data.data.length > 0) {
-          setLocationSuggestions(response.data.data);
-        } else {
-          setLocationSuggestions([]);
-          setLocationError('Ville introuvable. Essayez une autre localisation.');
-        }
-      } catch (error) {
-        console.error("Erreur lors de la recherche de la localisation", error);
-        setLocationSuggestions([]);
-        setLocationError('Ville introuvable. Essayez une autre localisation.');
-      }
-    } else {
-      setLocationSuggestions([]);
-      setLocationError('');
-    }
-  };
-
-  const handleLocationSelect = (selectedLocation) => {
-    setFormData({ ...formData, location: selectedLocation.label });
-    setLocationSuggestions([]);
-    setLocationError('');
-  };
+  const authToken = getCookie("auth_token");
+  const decodedToken = jwtDecode(authToken);
+  const MailUser = decodedToken.email;
+  const userId = decodedToken.userId;
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-    if (type === 'file') {
-      setFormData({ ...formData, image: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, image: e.target.files[0] });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
+    setMessage("");
+    setError("");
+    setLoading(true); // Start loading
 
-    const contactInfo = {
-      email: formData.email,
-      phone: formData.phone,
-    };
+   
 
     const form = new FormData();
     form.append("title", formData.title);
@@ -87,206 +46,135 @@ const CreateEventForm = () => {
     form.append("dateCreated", formData.dateCreated);
     form.append("dateEvent", formData.dateEvent);
     form.append("location", formData.location);
-    form.append("contactInfo", JSON.stringify(contactInfo));
-    form.append("createdBy", formData.createdBy);
+    form.append("createdBy", MailUser);
+    form.append("userId", userId);
 
     if (formData.image) {
       form.append("image", formData.image);
     } else {
       setError("Veuillez télécharger une image.");
+      setLoading(false); // Stop loading
       return;
     }
 
     try {
-      const response = await axios.post('https://projet-b3.onrender.com/api/createEvent', form, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const response = await axios.post(
+        //"https://projet-b3.onrender.com/api/createEvent",
+        "http://localhost:3002/api/createEvent",
+        form,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
       setMessage(response.data.message);
       setFormData({
-        title: '',
-        description: '',
-        category: '',
+        title: "",
+        description: "",
+        category: "",
         dateCreated: Date.now(),
-        dateEvent: '',
-        location: '',
+        dateEvent: "",
+        location: "",
         image: null,
-        email: '',
-        phone: '',
-        createdBy: '',
       });
+      fetchEvents()
     } catch (err) {
-      setError(err.response?.data?.message || 'Une erreur est survenue.');
+      setError(err.response?.data?.message || "Une erreur est survenue.");
+    } finally {
+      setLoading(false); // Stop loading after the request
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Créer un événement</h2>
-      {message && <p className="text-green-500 mb-4">{message}</p>}
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      {locationError && <p className="text-red-500 mb-4">{locationError}</p>} {/* Afficher l'erreur si la ville est introuvable */}
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Créer un Événement</h2>
+        {loading && <div className="loading-cube"></div>} {/* Show loading animation */}
+        {message && <p className="text-green-600">{message}</p>}
+        {error && <p className="text-red-600">{error}</p>}
 
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium">Titre</label>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
             name="title"
+            placeholder="Titre"
             value={formData.title}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium">Description</label>
           <textarea
             name="description"
+            placeholder="Description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-        </div>
-
-        {/* Champ Catégorie */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium">Catégorie</label>
           <select
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             required
+            className="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="" disabled>Choisir une catégorie</option>
+            <option value="">Sélectionner une catégorie</option>
             <option value="culturel">Culturel</option>
             <option value="sportif">Sportif</option>
-            <option value="communautaire">Communautaire</option>
             <option value="musique">Musique</option>
             <option value="théâtre">Théâtre</option>
-            <option value="conférence">Conférence</option>
-            <option value="festival">Festival</option>
-            <option value="art">Art</option>
-            <option value="bien-être">Bien-être</option>
-            <option value="éducation">Éducation</option>
             <option value="technologie">Technologie</option>
             <option value="gastronomie">Gastronomie</option>
-            <option value="environnement">Environnement</option>
-            <option value="mode">Mode</option>
-            <option value="entrepreneuriat">Entrepreneuriat</option>
-            <option value="littérature">Littérature</option>
-            <option value="caritatif">Caritatif</option>
-            <option value="cinéma">Cinéma</option>
-            <option value="famille">Famille</option>
-            <option value="voyage">Voyage</option>
           </select>
-        </div>
-
-        {/* Champ Date et Heure pour l'événement */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium">Date et Heure de l'événement</label>
           <input
-            type="datetime-local"
+            type="date"
             name="dateEvent"
             value={formData.dateEvent}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            min={new Date().toISOString().slice(0, 16)} // Pour s'assurer que l'heure est valide et ne peut pas être dans le passé
             required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-        </div>
-
-        {/* Champ Localisation */}
-        <div className="mb-4 relative">
-          <label className="block text-gray-700 font-medium">Localisation</label>
           <input
             type="text"
             name="location"
+            placeholder="Lieu"
             value={formData.location}
-            onChange={handleLocationChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            onChange={handleChange}
             required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          {locationSuggestions.length > 0 && (
-            <ul className="absolute left-0 right-0 bg-white border border-gray-300 mt-1 max-h-60 overflow-y-auto z-10">
-              {locationSuggestions.map((suggestion, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleLocationSelect(suggestion)}
-                  className="p-2 hover:bg-indigo-100 cursor-pointer"
-                >
-                  {suggestion.label}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {/* Champ Image */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium">Image</label>
           <input
             type="file"
             name="image"
-            onChange={handleChange}
-            accept="image/jpeg, image/jpg, image/png, image/gif"
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            accept="image/*"
+            onChange={handleFileChange}
             required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-        </div>
-
-        {/* Champs Informations de Contact */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium">Email de contact</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="email@exemple.com"
-            required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium">Numéro de téléphone de contact</label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="+33 6 12 34 56 78"
-            required
-          />
-        </div>
-
-        {/* Champ "Créé par" */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium">Créé par</label>
-          <input
-            type="text"
-            name="createdBy"
-            value={formData.createdBy}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            required
-          />
-        </div>
-
-        <div className="flex justify-center mt-6">
           <button
             type="submit"
-            className="bg-indigo-500 text-white font-medium py-3 px-6 rounded-lg hover:bg-indigo-600"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
           >
             Créer l'événement
           </button>
-        </div>
-      </form>
+        </form>
+      </div>
+      <style jsx>{`
+        .loading-cube {
+          width: 50px;
+          height: 50px;
+          margin: 20px auto;
+          background: blue;
+          animation: rotate 1s linear infinite;
+        }
+
+        @keyframes rotate {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 };
