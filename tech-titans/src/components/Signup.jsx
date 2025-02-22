@@ -74,7 +74,7 @@ function Signup() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-8 md:px-16">
+    <div className="flex items-center justify-center min-h-screen bg-black px-4 sm:px-8 md:px-16">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-3xl font-semibold text-center text-indigo-600 mb-6">Inscription</h1>
         {message && (

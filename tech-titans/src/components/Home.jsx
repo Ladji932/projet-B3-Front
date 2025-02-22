@@ -136,10 +136,10 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
   return (
     <div className="bg-black min-h-screen">
       {popup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
           <div className="bg-black p-6 rounded-lg shadow-lg text-center max-w-sm w-full">
-          <img src={popup.event.image} alt="" className="w-[100%] h-[30%] object-cover" />
-          <h3 className="text-lg font-bold">
+          <img src={popup.event.image} alt="" className="w-full h-40 object-cover rounded" />
+          <h3 className="text-lg font-bold mt-4">
               {popup.type === "participate"
                 ? "Confirmer la participation"
                 : "Confirmer le désistement"}
@@ -149,7 +149,7 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
                 ? `Êtes-vous sûr de vouloir participer à l'événement "${popup.event.title}" ?`
                 : `Êtes-vous sûr de vouloir vous désinscrire de l'événement "${popup.event.title}" ?`}
             </p>
-            <div className="flex justify-center space-x-4 mt-6">
+            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
               <button
                 onClick={closePopup}
                 className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
@@ -170,18 +170,20 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
         </div>
       )}
 
-      <main className="w-[92vw] mx-auto rounded-2xl py-14 bg-gradient-to-r from-gray-800 relative ">
-        <div className="grid grid-cols-1 grid-rows-3 items-center mt-[18px] h-full px-14 text-white">
-          <div>
-            <h1>Bienvenue sur notre site de billetterie !</h1>
+      <main className="container mx-auto px-4 rounded-2xl py-14 bg-gradient-to-r from-gray-800 relative ">
+        <div className="grid grid-cols-1 grid-rows-3 items-center mt-4 h-full px-14 text-white">
+          <div className="mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center">
+              Bienvenue sur notre site de billetterie !
+              </h1>
           </div>
-          <div>
-            <p className="text-4xl font-bold">
-              Où vos rêves <span>Événementiel</span> <br /> prennent vie !
+          <div className="mb-4">
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-center">
+              Où vos rêves <span className="text-blue-500">Événementiel</span> <br /> prennent vie !
             </p>
           </div>
           <div className="pb-14">
-            <p>
+            <p className="text-center text-base sm:text-lg">
               Non seulement vous pouvez acheter des billets pour les événements les plus populaires, mais vous pouvez
               également créer vos propres billets personnalisés grâce à notre plateforme facile à utiliser.
             </p>
@@ -192,8 +194,8 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
         </button>
       </main>
 
-      <section className="w-[92vw] mx-auto mt-28">
-        <h2 className="text-4xl font-bold text-center text-white">Pourquoi choisir notre plateforme ?</h2>
+      <section className="container mx-auto px-4 mt-28">
+        <h2 className="text-3xl sm:text-4xl font-bold text-center text-white">Pourquoi choisir notre plateforme ?</h2>
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="p-6 bg-white rounded-lg shadow-md text-center">
@@ -204,14 +206,14 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
           </div>
 
           <div className="p-6 bg-white rounded-lg shadow-md text-center">
-            <h3 className="text-2xl font-bold text-green-600">Billetterie personnalisée</h3>
+            <h3 className="text-xl font-bold text-green-600">Billetterie personnalisée</h3>
             <p className="mt-2 text-white-600">
               Offrez à vos participants une expérience unique en personnalisant vos billets.
             </p>
           </div>
 
           <div className="p-6 bg-white rounded-lg shadow-md text-center">
-            <h3 className="text-2xl font-bold text-red-600">Notifications automatiques</h3>
+            <h3 className="text-xl font-bold text-red-600">Notifications automatiques</h3>
             <p className="mt-2 text-white-600">
               Recevez des rappels et tenez vos participants informés de toutes les mises à jour.
             </p>
@@ -219,8 +221,8 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
         </div>
       </section>
 
-      <section className="w-[92vw] mx-auto mt-28">
-  <h2 className="text-4xl font-bold text-center text-white mb-12">Les événements</h2>
+      <section className="container mx-auto px-4 mt-28">
+  <h2 className="text-3xl sm:text-4xl font-bold text-center text-white mb-12">Les événements</h2>
 
   <div className="relative">
     {!allEvents.length ? (
@@ -237,11 +239,11 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
           const isParticipating = userEvents.some(userEvent => userEvent._id === event._id);
 
           return (
-            <div key={event._id} className="p-4 w-[300px] h-[400px] flex flex-col items-center  transition-transform duration-300">
+            <div key={event._id} className="p-4 w-full w-[300px] h-[400px] flex flex-col items-center  transition-transform duration-300">
               <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-lg" />
               <h3 className="text-xl font-bold mt-2">{event.title}</h3>
-              <p className="text-white-600">{formatDate(event.dateEvent)}</p>
-              <p className="text-white-600 mt-1">Participants: {event.participants.length}</p>
+              <p className="text-white-400">{formatDate(event.dateEvent)}</p>
+              <p className="text-white-400 mt-1">Participants: {event.participants.length}</p>
               <div className="mt-4">
                 {isLoggedIn &&
                  <button
@@ -260,19 +262,15 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
         })}
       </Slider>
     ) : (
-      <div className="flex justify-around">
+      <div className="flex flex-col sm:flex-row justify-around">
         {allEvents.map(event => {
           const isParticipating = userEvents.some(userEvent => userEvent._id === event._id);
 
           return (
-            <div key={event._id} className="p-4 w-[300px] h-[400px] flex flex-col items-center shadow-lg border rounded-lg transition-transform duration-300 transform hover:scale-105">
+            <div key={event._id} className="p-4 w-full sm:w-[300px] h-[400px] flex flex-col items-center shadow-lg border rounded-lg transition-transform duration-300 transform hover:scale-105">
               <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-lg" />
               <h3 className="text-xl font-bold mt-2">{event.title}</h3>
-              <p className="text-white-600">{formatDate(event.dateEvent)}</p>
-
-
-
-
+              <p className="text-white-400">{formatDate(event.dateEvent)}</p>
             </div>
           );
         })}
@@ -281,12 +279,12 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
   </div>
 </section>
 
-      <section className="w-full max-w-7xl mx-auto mt-28">
+      <section className="container mx-auto px-4 mt-28">
         <div className="bg-gradient-to-r from-gray-800 p-16 rounded-3xl shadow-lg text-center">
-          <h2 className="text-5xl font-bold text-white mb-4 animate-in">
+          <h2 className="text-4xl font-bold text-white mb-4 animate-in">
             Découvrez tous les événements
           </h2>
-          <p className="text-xl text-white-300 mb-8 animate-in">
+          <p className="text-xl sm:text-2xl text-gray-300 mb-8 animate-in">
             Explorez des événements passionnants : conférences, concerts, ateliers et plus encore. Trouvez ce qui vous intéresse et rejoignez des expériences mémorables.
           </p>
           <div className="flex justify-center mt-10">
@@ -300,10 +298,10 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
         </div>
       </section>
 
-      <section className="w-[60vw] mx-auto mt-28">
+      <section className="container mx-auto px-4 mt-28">
         <div className="text-center bg-black bg-gradient-to-r from-gray-800 relative p-10 rounded-xl shadow-lg">
-          <h2 className="text-4xl font-bold text-white mb-4">Créer un événement</h2>
-          <p className="text-lg text-white mb-8">
+          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">Créer un événement</h2>
+          <p className="text-lg sm:text-xl text-white mb-8">
             Créez des événements facilement et partagez-les avec vos participants. Rejoignez notre plateforme et faites vivre des expériences uniques !
           </p>
           <Link

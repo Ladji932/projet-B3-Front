@@ -98,44 +98,46 @@ function Login() {
     };
 
     return (
-        <div className="login flex flex-col h-screen">
-            <section className="flex flex-col items-center justify-center flex-grow">
-                <h1 className="text-2xl font-bold mb-6">Connexion</h1>
-                <form className="flex flex-col gap-4 w-full max-w-md" onSubmit={handleSubmit}>
-                    <input
-                        className="border border-gray-300 rounded-lg px-4 py-2"
-                        type="text"
-                        name="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="adresse mail"
-                    />
-                    <input
-                        className="border border-gray-300 rounded-lg px-4 py-2"
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="mot de passe"
-                    />
-                    <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                        type="submit"
-                    >
-                        Envoyer
-                    </button>
-                </form>
-                {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
-                {successMessage && <p className="text-green-500 mt-4">{successMessage}</p>}
+        <div className="login bg-black flex flex-col h-screen">
+            <div className="bg-white p-8 justify-center rounded-lg shadow-lg my-auto mx-auto w-full max-w-md">
+                <section className="flex flex-col items-center justify-center flex-grow">
+                    <h1 className="text-2xl text-black font-bold mb-6">Connexion</h1>
+                    <form className="flex flex-col gap-4 w-full max-w-md" onSubmit={handleSubmit}>
+                        <input
+                            className="border border-gray-300 rounded-lg px-4 py-2"
+                            type="text"
+                            name="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="adresse mail"
+                        />
+                        <input
+                            className="border border-gray-300 rounded-lg px-4 py-2"
+                            type="password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="mot de passe"
+                        />
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                            type="submit"
+                        >
+                            Envoyer
+                        </button>
+                    </form>
+                    {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
+                    {successMessage && <p className="text-green-500 mt-4">{successMessage}</p>}
 
-                <GoogleOAuthProvider clientId="772746900391-ibsq5i8d9ahpv2o4c3uos0b15hab77sh.apps.googleusercontent.com">
-                    <GoogleLogin
-                        onSuccess={handleGoogleSuccess}
-                        onFailure={handleGoogleFailure}
-                        style={{ marginTop: '50px' }}
-                    />
-                </GoogleOAuthProvider>
-            </section>
+                    <GoogleOAuthProvider clientId="772746900391-ibsq5i8d9ahpv2o4c3uos0b15hab77sh.apps.googleusercontent.com">
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onFailure={handleGoogleFailure}
+                            style={{ marginTop: '50px' }}
+                        />
+                    </GoogleOAuthProvider>
+                </section>
+            </div>
         </div>
     );
 }
