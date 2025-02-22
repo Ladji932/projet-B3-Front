@@ -24,6 +24,7 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
     };
   }, []);
 
+  // Filtrage des événements par titre
   const eventsArray = Array.isArray(allEvents) ? allEvents : [];
   const filteredEvents = eventsArray.filter((event) =>
     event && event.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -46,98 +47,100 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
   };
 
   return (
-    <nav className="w-full mx-auto px-4 py-4 flex flex-wrap justify-between items-center bg-black">
-      {/* En-tête supérieur (logo et bouton mobile) */}
-      <div className="flex items-center w-full justify-between">
+    <nav className="bg-black w-full px-4 py-4 overflow-x-hidden">
+      {/* Barre du haut : Logo + Bouton mobile */}
+      <div className="flex items-center justify-between">
         <Link to="/" className="blockNav1">
-          <h2 className="font-bold text-white text-3xl">Event Ease</h2>
+          <h2 className="font-bold text-white text-2xl sm:text-3xl">Event Ease</h2>
         </Link>
         <button className="lg:hidden text-3xl text-white" onClick={toggleMenu}>
           <IoIosMenu />
         </button>
       </div>
 
-      {/* Recherche et liens (affichés sur desktop) */}
-      <div className="hidden lg:flex w-full items-center justify-between mt-4">
-        <div className="flex-grow max-w-lg">
-          <form onSubmit={handleSearch} className="flex w-full">
-            <input
-              type="text"
-              className="flex-grow border border-gray-300 rounded-l-lg px-4 py-2"
-              placeholder="Rechercher des événements..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="bg-gray-800 text-white rounded-r-lg px-4 py-2 hover:bg-blue-600"
-            >
-              Rechercher
-            </button>
-          </form>
-        </div>
-        <div className="flex items-center space-x-6">
-          <div className="flex space-x-4">
-            {isLoggedIn && (
-              <Link
-                to="/userDetails"
-                className="bg-blue-500 text-white rounded-lg px-4 py-2"
-              >
-                Page utilisateur
-              </Link>
-            )}
-            <Link
-              to="/AllEvent"
-              className="bg-gray-800 text-white rounded-lg px-4 py-2"
-            >
-              Les événements
-            </Link>
-          </div>
-          <div className="flex space-x-4">
-            {isLoggedIn ? (
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600"
-              >
-                Déconnexion
-              </button>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="bg-gray-800 text-white rounded-lg px-4 py-2"
-                >
-                  Connexion
-                </Link>
-                <Link
-                  to="/inscription"
-                  className="bg-gray-800 text-white rounded-lg px-4 py-2"
-                >
-                  Inscription
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Barre de recherche mobile */}
-      <div className="w-full lg:hidden mt-4">
+      {/* Barre de recherche (mobile) : visible en dessous du logo sur petit écran */}
+      <div className="lg:hidden mt-4">
         <form onSubmit={handleSearch} className="flex w-full">
           <input
             type="text"
-            className="flex-grow border border-gray-300 rounded-l-lg px-4 py-2"
+            className="flex-grow border border-gray-300 rounded-l-lg px-3 py-2"
             placeholder="Rechercher des événements..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button
             type="submit"
-            className="bg-gray-800 text-white rounded-r-lg px-4 py-2 hover:bg-blue-600"
+            className="bg-gray-800 text-white rounded-r-lg px-3 py-2 hover:bg-blue-600"
           >
             Rechercher
           </button>
         </form>
+      </div>
+
+      {/* Barre de recherche + Liens (desktop) */}
+      <div className="hidden lg:flex items-center justify-between mt-4">
+        {/* Recherche desktop */}
+        <div className="flex-grow max-w-xl">
+          <form onSubmit={handleSearch} className="flex w-full">
+            <input
+              type="text"
+              className="flex-grow border border-gray-300 rounded-l-lg px-3 py-2"
+              placeholder="Rechercher des événements..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="bg-gray-800 text-white rounded-r-lg px-3 py-2 hover:bg-blue-600"
+            >
+              Rechercher
+            </button>
+          </form>
+        </div>
+
+        {/* Liens desktop */}
+        <div className="flex items-center space-x-6 ml-8">
+          {/* Lien(s) accessible(s) uniquement si l'utilisateur est loggé */}
+          {isLoggedIn && (
+            <Link
+              to="/userDetails"
+              className="bg-blue-500 text-white rounded-lg px-4 py-2"
+            >
+              Page utilisateur
+            </Link>
+          )}
+
+          <Link
+            to="/AllEvent"
+            className="bg-gray-800 text-white rounded-lg px-4 py-2"
+          >
+            Les événements
+          </Link>
+
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600"
+            >
+              Déconnexion
+            </button>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="bg-gray-800 text-white rounded-lg px-4 py-2"
+              >
+                Connexion
+              </Link>
+              <Link
+                to="/inscription"
+                className="bg-gray-800 text-white rounded-lg px-4 py-2"
+              >
+                Inscription
+              </Link>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Menu mobile (sidebar) */}
@@ -152,12 +155,13 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
         >
           <IoIosClose />
         </button>
-        <div className="flex flex-col items-center mt-12 space-y-6">
+
+        <div className="flex flex-col items-center mt-12 space-y-6 px-4">
           {isLoggedIn && (
             <Link
               to="/userDetails"
               onClick={toggleMenu}
-              className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600"
+              className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 w-full text-center"
             >
               Page utilisateur
             </Link>
@@ -165,7 +169,7 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
           <Link
             to="/AllEvent"
             onClick={toggleMenu}
-            className="bg-gray-800 text-white rounded-lg px-4 py-2 hover:bg-gray-700"
+            className="bg-gray-800 text-white rounded-lg px-4 py-2 hover:bg-gray-700 w-full text-center"
           >
             Les événements
           </Link>
@@ -175,7 +179,7 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
                 handleLogout();
                 toggleMenu();
               }}
-              className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600"
+              className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600 w-full"
             >
               Déconnexion
             </button>
@@ -184,14 +188,14 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
               <Link
                 to="/login"
                 onClick={toggleMenu}
-                className="bg-gray-800 text-white rounded-lg px-4 py-2 hover:bg-gray-700"
+                className="bg-gray-800 text-white rounded-lg px-4 py-2 hover:bg-gray-700 w-full text-center"
               >
                 Connexion
               </Link>
               <Link
                 to="/inscription"
                 onClick={toggleMenu}
-                className="bg-gray-800 text-white rounded-lg px-4 py-2 hover:bg-gray-700"
+                className="bg-gray-800 text-white rounded-lg px-4 py-2 hover:bg-gray-700 w-full text-center"
               >
                 Inscription
               </Link>
@@ -200,7 +204,7 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
           <Link
             to="/"
             onClick={toggleMenu}
-            className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600"
+            className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 w-full text-center"
           >
             Accueil
           </Link>
