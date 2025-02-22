@@ -6,20 +6,16 @@ import "slick-carousel/slick/slick-theme.css";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import backgroundImage from "../assets/image.webp";
 
-function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) {
-
-  console.log(allEvents)
-
+function Home({ allEvents, isLoggedIn, setIsLoggedIn, getCookie, fetchEvents }) {
   const [userEvents, setUserEvents] = useState([]);
   const [popup, setPopup] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
-
-
   const authToken = getCookie("auth_token");
 
-
+  // ========================= FETCH USER EVENTS =========================
   const fetchUserEvents = async () => {
     if (authToken) {
       try {
@@ -30,9 +26,6 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
 
         if (response.status === 200) {
           setUserEvents(response.data.events);
-          if (response.data.events.length === 0) {
-            console.log("Vous participez à aucun événement.");
-          }
         } else {
           console.log(`Erreur lors de la récupération des événements : ${response.statusText}`);
         }
@@ -45,31 +38,34 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
     }
   };
 
-  
-
-  
   useEffect(() => {
     const userId = localStorage.getItem("userId");
-  
     const handleStorageChange = () => {
-        setIsLoggedIn(!!userId);
-        fetchUserEvents();
+      setIsLoggedIn(!!userId);
+      fetchUserEvents();
     };
-  
-  
+
     fetchUserEvents();
     window.addEventListener("storage", handleStorageChange);
-    
     return () => {
-        window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
-}, []);
+  }, []);
 
-  const formatDate = isoDate => {
-    const options = { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" };
+  // ========================= FORMAT DATE =========================
+  const formatDate = (isoDate) => {
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Europe/Paris",
+    };
     return new Date(isoDate).toLocaleDateString("fr-FR", options);
   };
 
+  // ========================= POPUP ACTIONS =========================
   const handlePopup = (event, type) => {
     setPopup({ event, type });
   };
@@ -80,14 +76,14 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
 
   const confirmAction = async () => {
     if (!popup) return;
-  
+
     const { event, type } = popup;
     if (!authToken) {
       console.log("Utilisateur non identifié. Veuillez vous connecter.");
       closePopup();
       return;
     }
-  
+
     let userId;
     try {
       const decodedToken = jwtDecode(authToken);
@@ -97,49 +93,51 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
       closePopup();
       return;
     }
-  
+
     setActionLoading(true);
     try {
       const url =
         type === "participate"
           ? `http://localhost:3002/api/participate/${userId}/${event._id}`
           : `http://localhost:3002/api/withdraw/${userId}/${event._id}`;
-  
-      const response = await axios.post(url);
-      console.log(response.data.message);
-  
+      await axios.post(url);
       await fetchUserEvents(); // Met à jour les événements auxquels l'utilisateur participe
       await fetchEvents(); // Rafraîchit tous les événements pour mettre à jour le nombre de participants
     } catch (err) {
       console.error("Erreur lors de l'action :", err);
-      console.log("Une erreur est survenue lors de l'action.");
     } finally {
       setActionLoading(false);
       closePopup();
     }
   };
-  
+
+  // ========================= SLIDER SETTINGS =========================
   const settings = {
-    infinite: allEvents.length > 3, 
+    infinite: allEvents.length > 3,
     speed: 1000,
-    slidesToShow: allEvents.length < 4 ? allEvents.length : 3, 
+    slidesToShow: allEvents.length < 4 ? allEvents.length : 3,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
     pauseOnHover: true,
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 2 } },
-      { breakpoint: 740, settings: { slidesToShow: 2 } },
+      { breakpoint: 740, settings: { slidesToShow: 1 } },
     ],
   };
 
   return (
-    <div className="bg-black min-h-screen">
+    <div className="bg-black min-h-screen overflow-x-hidden">
+      {/* ========================= POPUP ========================= */}
       {popup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
           <div className="bg-black p-6 rounded-lg shadow-lg text-center max-w-sm w-full">
-          <img src={popup.event.image} alt="" className="w-full h-40 object-cover rounded" />
-          <h3 className="text-lg font-bold mt-4">
+            <img
+              src={popup.event.image}
+              alt=""
+              className="w-full h-40 object-cover rounded"
+            />
+            <h3 className="text-lg font-bold mt-4">
               {popup.type === "participate"
                 ? "Confirmer la participation"
                 : "Confirmer le désistement"}
@@ -170,127 +168,197 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
         </div>
       )}
 
-      <main className="container mx-auto px-4 rounded-2xl py-14 bg-gradient-to-r from-gray-800 relative ">
-        <div className="grid grid-cols-1 grid-rows-3 items-center mt-4 h-full px-14 text-white">
-          <div className="mb-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center">
+      {/* ========================= SECTION HERO ========================= */}
+      <main
+        className="
+          mx-auto
+          px-4
+          py-14
+          bg-cover
+          bg-center
+          relative
+          rounded-2xl
+          max-w-5xl
+        "
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      >
+        <div className="grid grid-cols-1 gap-4 h-full text-white p-4 rounded-2xl">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold">
               Bienvenue sur notre site de billetterie !
-              </h1>
+            </h1>
           </div>
-          <div className="mb-4">
-            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-center">
-              Où vos rêves <span className="text-blue-500">Événementiel</span> <br /> prennent vie !
+          <div>
+            <p className="text-2xl sm:text-4xl font-bold">
+              Où vos rêves <span className="text-blue-400">Événementiel</span> <br />
+              prennent vie !
             </p>
           </div>
           <div className="pb-14">
-            <p className="text-center text-base sm:text-lg">
-              Non seulement vous pouvez acheter des billets pour les événements les plus populaires, mais vous pouvez
-              également créer vos propres billets personnalisés grâce à notre plateforme facile à utiliser.
+            <p className="text-sm sm:text-base">
+              Non seulement vous pouvez acheter des billets pour les événements
+              les plus populaires, mais vous pouvez également créer vos propres
+              billets personnalisés grâce à notre plateforme facile à utiliser.
             </p>
           </div>
         </div>
-        <button className="absolute bottom-[-25px] left-1/2 transform -translate-x-1/2 bg-blue-600 shadow-lg text-white p-4 rounded-lg">
-          Explorer les événements
-        </button>
+        <Link
+          className="absolute bottom-[-25px] left-1/2 transform -translate-x-1/2 bg-blue-600 shadow-lg text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg"
+          to="/AllEvent"
+        >
+          Voir les événements
+        </Link>
       </main>
 
-      <section className="container mx-auto px-4 mt-28">
-        <h2 className="text-3xl sm:text-4xl font-bold text-center text-white">Pourquoi choisir notre plateforme ?</h2>
-
+      {/* ========================= SECTION POURQUOI CHOISIR ? ========================= */}
+      <section className="container mx-auto px-4 mt-28 max-w-6xl">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white">
+          Pourquoi choisir notre plateforme ?
+        </h2>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="p-6 bg-white rounded-lg shadow-md text-center">
             <h3 className="text-2xl font-bold text-blue-600">Création simplifiée</h3>
-            <p className="mt-2 text-white-600">
+            <p className="mt-2 text-gray-600">
               Créez et gérez vos événements en quelques clics grâce à notre interface intuitive.
             </p>
           </div>
-
           <div className="p-6 bg-white rounded-lg shadow-md text-center">
-            <h3 className="text-xl font-bold text-green-600">Billetterie personnalisée</h3>
-            <p className="mt-2 text-white-600">
+            <h3 className="text-2xl font-bold text-green-600">Billetterie personnalisée</h3>
+            <p className="mt-2 text-gray-600">
               Offrez à vos participants une expérience unique en personnalisant vos billets.
             </p>
           </div>
-
           <div className="p-6 bg-white rounded-lg shadow-md text-center">
-            <h3 className="text-xl font-bold text-red-600">Notifications automatiques</h3>
-            <p className="mt-2 text-white-600">
+            <h3 className="text-2xl font-bold text-red-600">Notifications automatiques</h3>
+            <p className="mt-2 text-gray-600">
               Recevez des rappels et tenez vos participants informés de toutes les mises à jour.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="container mx-auto px-4 mt-28">
-  <h2 className="text-3xl sm:text-4xl font-bold text-center text-white mb-12">Les événements</h2>
-
-  <div className="relative">
-    {!allEvents.length ? (
-      <p className="text-center text-lg text-white-500">Aucun événement disponible.</p>
-    ) : allEvents.length > 2 ? (
-      <Slider
-        {...{
-          ...settings,
-          slidesToShow: allEvents.length <= 4 ? allEvents.length : 4,
-          infinite: allEvents.length > 4,
-        }}
-      >
-        {allEvents.map(event => {
-          const isParticipating = userEvents.some(userEvent => userEvent._id === event._id);
-
-          return (
-            <div key={event._id} className="p-4 w-full w-[300px] h-[400px] flex flex-col items-center  transition-transform duration-300">
-              <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-lg" />
-              <h3 className="text-xl font-bold mt-2">{event.title}</h3>
-              <p className="text-white-400">{formatDate(event.dateEvent)}</p>
-              <p className="text-white-400 mt-1">Participants: {event.participants.length}</p>
-              <div className="mt-4">
-                {isLoggedIn &&
-                 <button
-                 className={`px-4 py-2 rounded-lg text-white ${
-                 isParticipating ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
-                 }`}
-                onClick={() => handlePopup(event, isParticipating ? "withdraw" : "participate")}
-               >
-             {isParticipating ? "Se désinscrire" : "Participer"}
-              </button>
-                }
-             
-              </div>
+      {/* ========================= SECTION LES ÉVÉNEMENTS ========================= */}
+      <section className="container mx-auto px-4 mt-28 max-w-6xl">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white mb-12">
+          Les événements
+        </h2>
+        <div className="relative">
+          {!allEvents.length ? (
+            <p className="text-center text-lg text-gray-500">Aucun événement disponible.</p>
+          ) : allEvents.length > 2 ? (
+            <Slider
+              {...{
+                ...settings,
+                slidesToShow: allEvents.length <= 4 ? allEvents.length : 4,
+                infinite: allEvents.length > 4,
+              }}
+            >
+              {allEvents.map((event) => {
+                const isParticipating = userEvents.some(
+                  (userEvent) => userEvent._id === event._id
+                );
+                return (
+                  <div
+                    key={event._id}
+                    className="p-4 w-full sm:w-[300px] h-[400px] flex flex-col items-center transition-transform duration-300"
+                  >
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                    <h3 className="text-xl font-bold mt-2 text-white">
+                      {event.title}
+                    </h3>
+                    <p className="text-gray-400">{formatDate(event.dateEvent)}</p>
+                    <p className="text-gray-400 mt-1">
+                      Participants: {event.participants.length}
+                    </p>
+                    <div className="mt-4">
+                      {isLoggedIn && (
+                        <button
+                          className={`px-4 py-2 rounded-lg text-white ${
+                            isParticipating
+                              ? "bg-red-500 hover:bg-red-600"
+                              : "bg-green-500 hover:bg-green-600"
+                          }`}
+                          onClick={() =>
+                            handlePopup(
+                              event,
+                              isParticipating ? "withdraw" : "participate"
+                            )
+                          }
+                        >
+                          {isParticipating ? "Se désinscrire" : "Participer"}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </Slider>
+          ) : (
+            <div className="flex flex-wrap justify-center sm:justify-around">
+              {allEvents.map((event) => {
+                const isParticipating = userEvents.some(
+                  (userEvent) => userEvent._id === event._id
+                );
+                return (
+                  <div
+                    key={event._id}
+                    className="p-4 w-full sm:w-[300px] h-[400px] flex flex-col items-center shadow-lg border rounded-lg transition-transform duration-300 transform hover:scale-105 mb-4"
+                  >
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                    <h3 className="text-xl font-bold mt-2 text-white">
+                      {event.title}
+                    </h3>
+                    <p className="text-gray-400">{formatDate(event.dateEvent)}</p>
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
-      </Slider>
-    ) : (
-      <div className="flex flex-col sm:flex-row justify-around">
-        {allEvents.map(event => {
-          const isParticipating = userEvents.some(userEvent => userEvent._id === event._id);
+          )}
+        </div>
+      </section>
 
-          return (
-            <div key={event._id} className="p-4 w-full sm:w-[300px] h-[400px] flex flex-col items-center shadow-lg border rounded-lg transition-transform duration-300 transform hover:scale-105">
-              <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-lg" />
-              <h3 className="text-xl font-bold mt-2">{event.title}</h3>
-              <p className="text-white-400">{formatDate(event.dateEvent)}</p>
-            </div>
-          );
-        })}
-      </div>
-    )}
-  </div>
-</section>
-
-      <section className="container mx-auto px-4 mt-28">
-        <div className="bg-gradient-to-r from-gray-800 p-16 rounded-3xl shadow-lg text-center">
-          <h2 className="text-4xl font-bold text-white mb-4 animate-in">
+      {/* ========================= SECTION DÉCOUVREZ TOUS LES ÉVÉNEMENTS ========================= */}
+      <section className="container mx-auto px-4 mt-28 max-w-6xl">
+        <div className="bg-gradient-to-r from-gray-800 to-gray-800 p-8 sm:p-16 rounded-3xl shadow-lg text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 animate-in">
             Découvrez tous les événements
           </h2>
-          <p className="text-xl sm:text-2xl text-gray-300 mb-8 animate-in">
-            Explorez des événements passionnants : conférences, concerts, ateliers et plus encore. Trouvez ce qui vous intéresse et rejoignez des expériences mémorables.
+          <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 animate-in max-w-2xl mx-auto">
+            Explorez des événements passionnants : conférences, concerts, ateliers et plus encore.
+            Trouvez ce qui vous intéresse et rejoignez des expériences mémorables.
           </p>
           <div className="flex justify-center mt-10">
             <Link
               to="/AllEvent"
-              className="bg-transparent border-2 border-white text-white px-10 py-4 rounded-full text-2xl font-semibold shadow-lg hover:bg-blue-600 hover:text-white-900 hover:border-white-900 transition-all duration-300 animate-in"
+              className="
+                bg-transparent
+                border-2
+                border-white
+                text-white
+                px-6
+                sm:px-10
+                py-2
+                sm:py-4
+                rounded-full
+                text-lg
+                sm:text-2xl
+                font-semibold
+                shadow-lg
+                hover:bg-blue-600
+                hover:text-gray-900
+                hover:border-gray-900
+                transition-all
+                duration-300
+                animate-in
+              "
             >
               Voir tous les événements
             </Link>
@@ -298,15 +366,37 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
         </div>
       </section>
 
-      <section className="container mx-auto px-4 mt-28">
-        <div className="text-center bg-black bg-gradient-to-r from-gray-800 relative p-10 rounded-xl shadow-lg">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">Créer un événement</h2>
-          <p className="text-lg sm:text-xl text-white mb-8">
-            Créez des événements facilement et partagez-les avec vos participants. Rejoignez notre plateforme et faites vivre des expériences uniques !
+      {/* ========================= SECTION CRÉER UN ÉVÉNEMENT ========================= */}
+      <section className="container mx-auto px-4 mt-28 max-w-4xl">
+        <div className="text-center bg-gradient-to-r from-gray-800 to-gray-800 p-8 sm:p-10 rounded-xl shadow-lg">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
+            Créer un événement
+          </h2>
+          <p className="text-sm sm:text-base md:text-lg text-white mb-8 max-w-xl mx-auto">
+            Créez des événements facilement et partagez-les avec vos participants.
+            Rejoignez notre plateforme et faites vivre des expériences uniques !
           </p>
           <Link
             to="/addEvent"
-            className="inline-block bg-white text-blue-600 px-8 py-4 rounded-full text-xl font-semibold shadow-lg hover:shadow-2xl hover:bg-blue-700 hover:text-white transition-all duration-300"
+            className="
+              inline-block
+              bg-white
+              text-blue-600
+              px-6
+              py-2
+              sm:px-8
+              sm:py-4
+              rounded-full
+              text-lg
+              sm:text-xl
+              font-semibold
+              shadow-lg
+              hover:shadow-2xl
+              hover:bg-blue-700
+              hover:text-white
+              transition-all
+              duration-300
+            "
           >
             Créer un événement
           </Link>

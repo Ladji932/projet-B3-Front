@@ -109,7 +109,6 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
               Page utilisateur
             </Link>
           )}
-
           <Link
             to="/AllEvent"
             className="bg-gray-800 text-white rounded-lg px-4 py-2"
@@ -145,9 +144,11 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
 
       {/* Menu mobile (sidebar) */}
       <div
-        className={`fixed top-0 right-0 w-64 bg-white h-full shadow-lg transform transition-transform duration-300 z-50 ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
-        } lg:hidden`}
+        className={`
+          fixed top-0 right-0 w-64 bg-white h-full shadow-lg
+          transform transition-transform duration-300 z-50
+          ${isMenuOpen ? "translate-x-0" : "translate-x-full"} lg:hidden
+        `}
       >
         <button
           className="absolute top-4 right-4 text-3xl"
@@ -155,7 +156,6 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
         >
           <IoIosClose />
         </button>
-
         <div className="flex flex-col items-center mt-12 space-y-6 px-4">
           {isLoggedIn && (
             <Link
