@@ -134,10 +134,10 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
   };
 
   return (
-    <div>
+    <div className="bg-black min-h-screen">
       {popup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-sm w-full">
+          <div className="bg-black p-6 rounded-lg shadow-lg text-center max-w-sm w-full">
           <img src={popup.event.image} alt="" className="w-[100%] h-[30%] object-cover" />
           <h3 className="text-lg font-bold">
               {popup.type === "participate"
@@ -170,7 +170,7 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
         </div>
       )}
 
-      <main className="w-[92vw] mx-auto mt-[18px] rounded-2xl py-14 bg-gradient-to-r from-gray-800 to-gray-800 relative ">
+      <main className="w-[92vw] mx-auto rounded-2xl py-14 bg-gradient-to-r from-gray-800 relative ">
         <div className="grid grid-cols-1 grid-rows-3 items-center mt-[18px] h-full px-14 text-white">
           <div>
             <h1>Bienvenue sur notre site de billetterie !</h1>
@@ -193,26 +193,26 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
       </main>
 
       <section className="w-[92vw] mx-auto mt-28">
-        <h2 className="text-4xl font-bold text-center text-gray-800">Pourquoi choisir notre plateforme ?</h2>
+        <h2 className="text-4xl font-bold text-center text-white">Pourquoi choisir notre plateforme ?</h2>
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="p-6 bg-white rounded-lg shadow-md text-center">
             <h3 className="text-2xl font-bold text-blue-600">Création simplifiée</h3>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-white-600">
               Créez et gérez vos événements en quelques clics grâce à notre interface intuitive.
             </p>
           </div>
 
           <div className="p-6 bg-white rounded-lg shadow-md text-center">
             <h3 className="text-2xl font-bold text-green-600">Billetterie personnalisée</h3>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-white-600">
               Offrez à vos participants une expérience unique en personnalisant vos billets.
             </p>
           </div>
 
           <div className="p-6 bg-white rounded-lg shadow-md text-center">
             <h3 className="text-2xl font-bold text-red-600">Notifications automatiques</h3>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-white-600">
               Recevez des rappels et tenez vos participants informés de toutes les mises à jour.
             </p>
           </div>
@@ -220,11 +220,11 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
       </section>
 
       <section className="w-[92vw] mx-auto mt-28">
-  <h2 className="text-4xl font-bold text-center text-gray-800 mb-12">Les événements</h2>
+  <h2 className="text-4xl font-bold text-center text-white mb-12">Les événements</h2>
 
   <div className="relative">
     {!allEvents.length ? (
-      <p className="text-center text-lg text-gray-500">Aucun événement disponible.</p>
+      <p className="text-center text-lg text-white-500">Aucun événement disponible.</p>
     ) : allEvents.length > 2 ? (
       <Slider
         {...{
@@ -240,8 +240,8 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
             <div key={event._id} className="p-4 w-[300px] h-[400px] flex flex-col items-center  transition-transform duration-300">
               <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-lg" />
               <h3 className="text-xl font-bold mt-2">{event.title}</h3>
-              <p className="text-gray-600">{formatDate(event.dateEvent)}</p>
-              <p className="text-gray-600 mt-1">Participants: {event.participants.length}</p>
+              <p className="text-white-600">{formatDate(event.dateEvent)}</p>
+              <p className="text-white-600 mt-1">Participants: {event.participants.length}</p>
               <div className="mt-4">
                 {isLoggedIn &&
                  <button
@@ -268,7 +268,7 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
             <div key={event._id} className="p-4 w-[300px] h-[400px] flex flex-col items-center shadow-lg border rounded-lg transition-transform duration-300 transform hover:scale-105">
               <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-lg" />
               <h3 className="text-xl font-bold mt-2">{event.title}</h3>
-              <p className="text-gray-600">{formatDate(event.dateEvent)}</p>
+              <p className="text-white-600">{formatDate(event.dateEvent)}</p>
 
 
 
@@ -282,17 +282,17 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
 </section>
 
       <section className="w-full max-w-7xl mx-auto mt-28">
-        <div className="bg-gradient-to-r from-gray-800 to-gray-800 p-16 rounded-3xl shadow-lg text-center">
+        <div className="bg-gradient-to-r from-gray-800 p-16 rounded-3xl shadow-lg text-center">
           <h2 className="text-5xl font-bold text-white mb-4 animate-in">
             Découvrez tous les événements
           </h2>
-          <p className="text-xl text-gray-300 mb-8 animate-in">
+          <p className="text-xl text-white-300 mb-8 animate-in">
             Explorez des événements passionnants : conférences, concerts, ateliers et plus encore. Trouvez ce qui vous intéresse et rejoignez des expériences mémorables.
           </p>
           <div className="flex justify-center mt-10">
             <Link
               to="/AllEvent"
-              className="bg-transparent border-2 border-white text-white px-10 py-4 rounded-full text-2xl font-semibold shadow-lg hover:bg-white hover:text-gray-900 hover:border-gray-900 transition-all duration-300 animate-in"
+              className="bg-transparent border-2 border-white text-white px-10 py-4 rounded-full text-2xl font-semibold shadow-lg hover:bg-blue-600 hover:text-white-900 hover:border-white-900 transition-all duration-300 animate-in"
             >
               Voir tous les événements
             </Link>
@@ -301,7 +301,7 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn , getCookie ,fetchEvents}) 
       </section>
 
       <section className="w-[60vw] mx-auto mt-28">
-        <div className="text-center bg-black bg-gray-800 p-10 rounded-xl shadow-lg">
+        <div className="text-center bg-black bg-gradient-to-r from-gray-800 relative p-10 rounded-xl shadow-lg">
           <h2 className="text-4xl font-bold text-white mb-4">Créer un événement</h2>
           <p className="text-lg text-white mb-8">
             Créez des événements facilement et partagez-les avec vos participants. Rejoignez notre plateforme et faites vivre des expériences uniques !

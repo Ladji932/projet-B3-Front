@@ -52,9 +52,9 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
   };
 
   return (
-    <nav className="w-[99vw] mx-auto p-4 flex flex-wrap justify-between items-center">
+    <nav className="w-full mx-auto p-4 flex flex-wrap justify-between items-center bg-black">
       <Link to="/" className="blockNav1">
-        <h2 className="font-bold text-3xl">Eventnity.</h2>
+        <h2 className="font-bold text-white text-3xl">Event Ease</h2>
       </Link>
 
       <div className="flex justify-center w-full max-w-[600px] mb-4 lg:mb-0 lg:mr-8">

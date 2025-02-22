@@ -14,6 +14,10 @@ import GeneralAdminInterface from './components/GeneralAdminInterface';
 import AdminLogin from './components/AdminLogin';
 import Cookies from "js-cookie";
 import EditEvent from './components/EditEvent';
+import MentionLegal from './components/MentionLegal';
+import PolitiqueConfi from './components/PolitiqueConfi';
+import GestionCookies from './components/GestionCookies';
+import Footer from './components/Footer';  // Assure-toi que le chemin est correct
 
 function ProtectedRoute({ element, requiresAuthCheck = false, redirectTo = "/login" }) {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -50,7 +54,7 @@ function Root() {
       const response = await axios.get("http://localhost:3002/api/fetch-events");
       const shuffledEvents = response.data.events.sort(() => 0.5 - Math.random());
       setEvents(shuffledEvents);
-      console.log(AllEvents)
+      console.log(AllEvents);
     } catch (err) {
       console.error(err);
     }
@@ -83,8 +87,15 @@ function Root() {
           <Route path="/admin" element={<ProtectedRoute element={<GeneralAdminInterface allEvents={AllEvents} setEvents={setEvents} fetchEvents={fetchEvents} />} requiresAuthCheck={true} redirectTo="/adminLogin" />} />
           <Route path="/adminLogin" element={<AdminLogin />} />
           <Route path="/edit-event/:eventId" element={<EditEvent fetchEvents={fetchEvents} />} /> 
+          <Route path="/MentionLegal" element={<MentionLegal />} />
+          <Route path="/PolitiqueConfi" element={<PolitiqueConfi />} />
+          <Route path="/GestionCookies" element={<GestionCookies />} />
         </Routes>
 
+        {/* Intégration du Footer */}
+        <Footer />
+
+        {/* Bannière des cookies */}
         {!cookiesAccepted && (
           <div className="fixed bottom-0 left-0 w-full bg-gray-800 text-white py-4 px-4 flex justify-between items-center sm:flex-col sm:py-8 sm:px-6 sm:items-center">
             <p className="mb-4 sm:mb-2">Ce site utilise des cookies pour améliorer l&apos;expérience utilisateur. Acceptez-vous les cookies ?</p>

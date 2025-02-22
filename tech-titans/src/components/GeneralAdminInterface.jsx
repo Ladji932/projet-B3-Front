@@ -66,7 +66,7 @@ const GeneralAdminInterface = ({fetchEvents , allEvents , setEvents}) => {
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-lg font-semibold">
-                    Pas d'image disponible
+                    Pas d&apos;image disponible
                   </div>
                 )}
               </div>
