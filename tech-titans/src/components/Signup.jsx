@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Signup() {
   const [city, setCity] = useState('');
@@ -176,6 +177,9 @@ function Signup() {
             Envoyer
           </button>
         </form>
+        <Link to="/inscription" className= "text-gray-800 px-4 py-2  hover:underline">
+                    Vous avez déjà un compte ? Connectez-vous
+                    </Link> 
       </div>
     </div>
   );
