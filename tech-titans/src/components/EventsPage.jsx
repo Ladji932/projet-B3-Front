@@ -159,20 +159,31 @@ function EventsPage({ allEvents }) {
 
   return (
     <div className="events-page">
-      <div className="view-toggle">
-        <button
-          className={`view-button ${view === "calendar" ? "active" : ""}`}
-          onClick={() => setView("calendar")}
-        >
-          Vue Calendrier
-        </button>
-        <button
-          className={`view-button ${view === "list" ? "active" : ""}`}
-          onClick={() => setView("list")}
-        >
-          Vue Liste
-        </button>
+      <div className="flex justify-center">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full max-w-md p-8">
+          <button
+            className={`px-6 py-3 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 flex-1
+              ${view === "calendar" 
+                ? "bg-blue-600 text-white shadow-lg hover:bg-blue-700" 
+                : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+              }`}
+            onClick={() => setView("calendar")}
+          >
+            Vue Calendrier
+          </button>
+          <button
+            className={`px-6 py-3 rounded-lg text-sm sm:text-base font-medium transition-all duration-200 flex-1
+              ${view === "list" 
+                ? "bg-blue-600 text-white shadow-lg hover:bg-blue-700" 
+                : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+              }`}
+            onClick={() => setView("list")}
+          >
+            Vue Liste
+          </button>
+        </div>
       </div>
+
 
       <div className="category-filter text-center">
         <div className="mb-6 inline-block">

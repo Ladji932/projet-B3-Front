@@ -97,21 +97,25 @@ function Root() {
 
         {/* Bannière des cookies */}
         {!cookiesAccepted && (
-          <div className="fixed bottom-0 left-0 w-full bg-gray-800 text-white py-4 px-4 flex justify-between items-center sm:flex-col sm:py-8 sm:px-6 sm:items-center">
-            <p className="mb-4 sm:mb-2">Ce site utilise des cookies pour améliorer l&apos;expérience utilisateur. Acceptez-vous les cookies ?</p>
-            <div className="flex space-x-4 sm:flex-col sm:space-x-0 sm:space-y-2">
-              <button 
-                onClick={acceptCookies} 
-                className="bg-green-500 px-6 py-2 rounded-lg hover:bg-green-600 sm:px-4"
-              >
-                Accepter
-              </button>
-              <button 
-                onClick={declineCookies} 
-                className="ml-4 bg-red-500 px-6 py-2 rounded-lg hover:bg-red-600 sm:px-4 sm:ml-0"
-              >
-                Refuser
-              </button>
+            <div className="fixed bottom-0 left-0 w-full bg-gray-800 text-white z-50">
+            <div className="max-w-7xl mx-auto p-4 sm:p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <p className="text-sm sm:text-base flex-grow max-w-3xl">
+                Ce site utilise des cookies pour améliorer l&apos;expérience utilisateur. Acceptez-vous les cookies ?
+              </p>
+              <div className="flex flex-row sm:flex-row gap-3 sm:gap-4">
+                <button 
+                  onClick={acceptCookies} 
+                  className="flex-1 md:flex-none min-w-[120px] bg-green-500 px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-medium hover:bg-green-600 transition-colors duration-300"
+                >
+                  Accepter
+                </button>
+                <button 
+                  onClick={declineCookies} 
+                  className="flex-1 md:flex-none min-w-[120px] bg-red-500 px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-medium hover:bg-red-600 transition-colors duration-300"
+                >
+                  Refuser
+                </button>
+              </div>
             </div>
           </div>
         )}
