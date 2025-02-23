@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
@@ -136,6 +136,9 @@ function Login() {
                             style={{ marginTop: '50px' }}
                         />
                     </GoogleOAuthProvider>
+                    <Link to="/inscription" className= "text-gray-800 px-4 py-2  hover:underline">
+                    Pas de compte ? Inscrivez-vous
+                    </Link> 
                 </section>
             </div>
         </div>
