@@ -183,6 +183,13 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
           </Link>
         )}
         <Link
+          to="/"
+          onClick={toggleMenu}
+          className="w-full text-center bg-white text-blue-500 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
+        >
+          Accueil
+        </Link>
+        <Link
           to="/AllEvent"
           onClick={toggleMenu}
           className="w-full text-center bg-white text-blue-500 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
@@ -217,13 +224,7 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
             </Link>
           </>
         )}
-        <Link
-          to="/"
-          onClick={toggleMenu}
-          className="w-full text-center bg-white text-blue-500 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
-        >
-          Accueil
-        </Link>
+
       </div>
     </div>
     </nav>

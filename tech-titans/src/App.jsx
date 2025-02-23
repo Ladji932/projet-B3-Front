@@ -97,7 +97,7 @@ function Root() {
 
         {/* Bannière des cookies */}
         {!cookiesAccepted && (
-            <div className="fixed bottom-0 left-0 w-full bg-gray-800 text-white z-50">
+            <div className="fixed bottom-0 left-0 w-full bg-black/30 backdrop-blur-md text-white z-50">
             <div className="max-w-7xl mx-auto p-4 sm:p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <p className="text-sm sm:text-base flex-grow max-w-3xl">
                 Ce site utilise des cookies pour améliorer l&apos;expérience utilisateur. Acceptez-vous les cookies ?
