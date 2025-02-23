@@ -60,7 +60,7 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
       {/* Ligne principale */}
       <div className="flex items-center justify-between w-full">
         {/* Logo + barre de recherche (desktop) */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-12">
           {/* Logo */}
           <Link to="/" className="blockNav1">
             <h2 className="font-bold text-white text-2xl sm:text-3xl">Event Ease</h2>
@@ -158,8 +158,8 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
 
       <div
   className={`
-    fixed top-0 right-0 w-48 h-full
-    bg-black
+    fixed top-0 right-0 w-48 h-64
+    bg-black/30 backdrop-blur-md
     shadow-2xl rounded-l-xl 
     transform transition-transform duration-300 
     z-50 lg:hidden
@@ -177,7 +177,7 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
           <Link
             to="/userDetails"
             onClick={toggleMenu}
-            className="w-full text-center bg-white text-blue-600 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
+            className="w-full text-center bg-white text-black font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
           >
             Page utilisateur
           </Link>
@@ -185,7 +185,7 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
         <Link
           to="/AllEvent"
           onClick={toggleMenu}
-          className="w-full text-center bg-white text-blue-600 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
+          className="w-full text-center bg-white text-blue-500 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
         >
           Les événements
         </Link>
@@ -204,14 +204,14 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
             <Link
               to="/login"
               onClick={toggleMenu}
-              className="w-full text-center bg-white text-blue-600 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
+              className="w-full text-center bg-white text-blue-500 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
             >
               Connexion
             </Link>
             <Link
               to="/inscription"
               onClick={toggleMenu}
-              className="w-full text-center bg-white text-blue-600 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
+              className="w-full text-center bg-white text-blue-500 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
             >
               Inscription
             </Link>
@@ -220,7 +220,7 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
         <Link
           to="/"
           onClick={toggleMenu}
-          className="w-full text-center bg-white text-blue-600 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
+          className="w-full text-center bg-white text-blue-500 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
         >
           Accueil
         </Link>
