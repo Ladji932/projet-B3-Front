@@ -156,75 +156,76 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
         </form>
       </div>
 
-      {/* Menu mobile (sidebar) */}
       <div
-        className={`
-          fixed top-0 right-0 w-64 bg-white h-full shadow-lg
-          transform transition-transform duration-300 z-50
-          ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
-          lg:hidden
-        `}
-      >
-        <button
-          className="absolute top-4 right-4 text-3xl"
+  className={`
+    fixed top-0 right-0 w-48 h-full
+    bg-black
+    shadow-2xl rounded-l-xl 
+    transform transition-transform duration-300 
+    z-50 lg:hidden
+    ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
+  `}
+>
+      <button
+    onClick={toggleMenu}
+    className="absolute top-2 right-2 text-2xl text-white focus:outline-none"
+  >
+    <IoIosClose className="hover:text-gray-300" />
+      </button>
+      <div className="mt-12 flex flex-col items-center space-y-4 px-2">
+        {isLoggedIn && (
+          <Link
+            to="/userDetails"
+            onClick={toggleMenu}
+            className="w-full text-center bg-white text-blue-600 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
+          >
+            Page utilisateur
+          </Link>
+        )}
+        <Link
+          to="/AllEvent"
           onClick={toggleMenu}
+          className="w-full text-center bg-white text-blue-600 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
         >
-          <IoIosClose />
-        </button>
-        <div className="flex flex-col items-center mt-12 space-y-6 px-4">
-          {isLoggedIn && (
+          Les événements
+        </Link>
+        {isLoggedIn ? (
+          <button
+            onClick={() => {
+              handleLogout();
+              toggleMenu();
+            }}
+            className="w-full text-center bg-red-600 text-white font-semibold rounded-full px-2 py-1 shadow hover:bg-red-700 transition text-sm"
+          >
+            Déconnexion
+          </button>
+        ) : (
+          <>
             <Link
-              to="/userDetails"
+              to="/login"
               onClick={toggleMenu}
-              className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 w-full text-center"
+              className="w-full text-center bg-white text-blue-600 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
             >
-              Page utilisateur
+              Connexion
             </Link>
-          )}
-          <Link
-            to="/AllEvent"
-            onClick={toggleMenu}
-            className="bg-gray-800 text-white rounded-lg px-4 py-2 hover:bg-gray-700 w-full text-center"
-          >
-            Les événements
-          </Link>
-          {isLoggedIn ? (
-            <button
-              onClick={() => {
-                handleLogout();
-                toggleMenu();
-              }}
-              className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600 w-full"
+            <Link
+              to="/inscription"
+              onClick={toggleMenu}
+              className="w-full text-center bg-white text-blue-600 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
             >
-              Déconnexion
-            </button>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                onClick={toggleMenu}
-                className="bg-gray-800 text-white rounded-lg px-4 py-2 hover:bg-gray-700 w-full text-center"
-              >
-                Connexion
-              </Link>
-              <Link
-                to="/inscription"
-                onClick={toggleMenu}
-                className="bg-gray-800 text-white rounded-lg px-4 py-2 hover:bg-gray-700 w-full text-center"
-              >
-                Inscription
-              </Link>
-            </>
-          )}
-          <Link
-            to="/"
-            onClick={toggleMenu}
-            className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 w-full text-center"
-          >
-            Accueil
-          </Link>
-        </div>
+              Inscription
+            </Link>
+          </>
+        )}
+        <Link
+          to="/"
+          onClick={toggleMenu}
+          className="w-full text-center bg-white text-blue-600 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm"
+        >
+          Accueil
+        </Link>
       </div>
+    </div>
     </nav>
   );
 }
