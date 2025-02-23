@@ -210,11 +210,11 @@ function EventsPage({ allEvents }) {
 
       {view === "list" && (
         <div className="p-6 min-h-screen">
-          <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
+          <h1 className="text-4xl font-extrabold text-center text-white mb-8">
             Liste des Événements
           </h1>
           {filteredEvents.length === 0 ? (
-            <p className="text-center text-lg text-gray-500">
+            <p className="text-center text-lg text-white">
               Aucun événement trouvé pour cette catégorie.
             </p>
           ) : (

@@ -12,7 +12,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     padding-top: 5rem;
-    background: linear-gradient(to right, #c6f6d5, #edf2f7);
+    background: black;
   }
   
   /* ===== Vue Toggle ===== */
