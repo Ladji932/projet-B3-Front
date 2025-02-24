@@ -25,7 +25,7 @@ const EditEvent = ({fetchEvents}) => {
   useEffect(() => {
     const fetchEventData = async () => {
       try {
-        const response = await axios.post("http://localhost:3002/api/fetch-user-events", {
+        const response = await axios.post("https://projet-b3.onrender.com/api/fetch-user-events", {
           eventIds: [eventId],
         });
 

@@ -16,7 +16,7 @@ function Login() {
 
         try {
             const response = await axios.post(
-                'http://localhost:3002/api/loginManage',
+                'https://projet-b3.onrender.com/api/loginManage',
                 { email, password },
                 {
                     headers: {
@@ -44,7 +44,7 @@ function Login() {
     const handleForgotPassword = async () => {
         try {
             const response = await axios.post(
-                'http://localhost:3002/api/forgot-password',
+                'https://projet-b3.onrender.com/api/forgot-password',
                 { email },
                 {
                     headers: {
@@ -71,7 +71,7 @@ function Login() {
 
         try {
             const response = await axios.post(
-                'http://localhost:3002/api/loginGoogle',
+                'https://projet-b3.onrender.com/api/loginGoogle',
                 { idToken: credential },
                 {
                     headers: {

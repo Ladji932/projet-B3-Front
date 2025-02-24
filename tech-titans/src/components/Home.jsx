@@ -15,11 +15,19 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getCookie, fetchEvents }) 
 
   const authToken = getCookie("auth_token");
 
-  // ======================== FETCH USER EVENTS ========================
+  if (authToken) {
+    console.log("présent")
+  }else{
+    console.log("non")
+  }
+
+  // ======================== FETCH USER EVENTS ========================//
   const fetchUserEvents = async () => {
     if (authToken) {
       try {
-        const response = await axios.get("http://localhost:3002/api/user-events", {
+       const response = await axios.get("https://projet-b3.onrender.com/api/user-events"
+        //const response = await axios.get("http://localhost:3002/api/user-events"
+        , {
           headers: { Authorization: `Bearer ${authToken}` },
           withCredentials: true,
         });
@@ -33,7 +41,6 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getCookie, fetchEvents }) 
       }
     } else {
       setUserEvents([]);
-      console.log("Pas de token trouvé");
     }
   };
 

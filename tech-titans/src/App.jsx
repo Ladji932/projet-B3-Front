@@ -30,7 +30,8 @@ function ProtectedRoute({ element, requiresAuthCheck = false, redirectTo = "/log
 
     const checkAuth = async () => {
       try {
-        await axios.get("http://localhost:3002/api/checkAuth", { withCredentials: true });
+        await axios.get("https://projet-b3.onrender.com/api/checkAuth", { withCredentials: true });
+        //await axios.get("http://localhost:3002/api/checkAuth", { withCredentials: true });
         setIsAuthenticated(true);
       } catch {
         setIsAuthenticated(false);
@@ -51,7 +52,8 @@ function Root() {
 
   const fetchEvents = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:3002/api/fetch-events");
+      const response = await axios.get("https://projet-b3.onrender.com/api/fetch-events");
+     // const response = await axios.get("http://localhost:3002/api/fetch-events");
       const shuffledEvents = response.data.events.sort(() => 0.5 - Math.random());
       setEvents(shuffledEvents);
       console.log(AllEvents);
@@ -68,6 +70,9 @@ function Root() {
     const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
     return match ? match[2] : null;
   };
+
+  const test = getCookie("auth_token")
+  console.log('cokkies  ',test)
 
   const acceptCookies = () => setCookiesAccepted(true);
   const declineCookies = () => setCookiesAccepted(true);

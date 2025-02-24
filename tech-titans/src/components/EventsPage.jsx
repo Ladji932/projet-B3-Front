@@ -53,7 +53,9 @@ function EventsPage({ allEvents }) {
     const authToken = getCookie("auth_token");
     if (authToken) {
       try {
-        const response = await axios.get("http://localhost:3002/api/user-events", {
+       // const response = await axios.get("http://localhost:3002/api/user-events"
+        const response = await axios.get("https://projet-b3.onrender.com/api/user-events"
+        , {
           headers: { Authorization: `Bearer ${authToken}` },
           withCredentials: true,
         });

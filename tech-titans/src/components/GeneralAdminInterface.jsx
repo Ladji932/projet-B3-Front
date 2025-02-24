@@ -9,7 +9,7 @@ const GeneralAdminInterface = ({fetchEvents , allEvents , setEvents}) => {
 
   const deleteEvent = async (eventId) => {
     try {
-      await axios.delete(`http://localhost:3002/api/user/${eventId}`);
+      await axios.delete(`https://projet-b3.onrender.com/api/user/${eventId}`);
       setEvents(allEvents.filter(event => event._id !== eventId));
       fetchEvents()
       setSuccess('Événement supprimé avec succès.');
