@@ -8,25 +8,20 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import backgroundImage from "../assets/image.webp";
 
-function Home({ allEvents, isLoggedIn, setIsLoggedIn, getCookie, fetchEvents }) {
+function Home({ allEvents, isLoggedIn, setIsLoggedIn, getToken, fetchEvents }) {
   const [userEvents, setUserEvents] = useState([]);
   const [popup, setPopup] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
-  const authToken = getCookie("auth_token");
+  const authToken = getToken("auth_token");
 
-  if (authToken) {
-    console.log("présent")
-  }else{
-    console.log("non")
-  }
 
   // ======================== FETCH USER EVENTS ========================//
   const fetchUserEvents = async () => {
     if (authToken) {
       try {
        const response = await axios.get("https://projet-b3.onrender.com/api/user-events"
-        //const response = await axios.get("http://localhost:3002/api/user-events"
+      //  const response = await axios.get("http://localhost:3002/api/user-events"
         , {
           headers: { Authorization: `Bearer ${authToken}` },
           withCredentials: true,
@@ -104,8 +99,8 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getCookie, fetchEvents }) 
     try {
       const url =
         type === "participate"
-          ? `http://localhost:3002/api/participate/${userId}/${event._id}`
-          : `http://localhost:3002/api/withdraw/${userId}/${event._id}`;
+          ? `https://projet-b3.onrender.com/api/participate/${userId}/${event._id}`
+          : `https://projet-b3.onrender.com/api/withdraw/${userId}/${event._id}`;
       await axios.post(url);
 
       // Rafraîchit les événements
@@ -253,7 +248,7 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getCookie, fetchEvents }) 
         <div className="relative">
           {!allEvents.length ? (
             <p className="text-center text-lg text-gray-500">Aucun événement disponible.</p>
-          ) : allEvents.length > 2 ? (
+          ) : allEvents.length > 0 ? (
             <Slider
               {...{
                 ...settings,

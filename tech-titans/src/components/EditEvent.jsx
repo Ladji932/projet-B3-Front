@@ -61,7 +61,7 @@ const EditEvent = ({fetchEvents}) => {
         formData.append('image', image, image.name);
       }
 
-      await axios.post(`http://localhost:3002/api/update/${eventId}/${idUser}`, formData, {
+      await axios.post(`https://projet-b3.onrender.com/api/update/${eventId}/${idUser}`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           "Content-Type": "multipart/form-data" 

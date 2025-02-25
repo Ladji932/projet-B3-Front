@@ -4,12 +4,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
-function Login() {
+function Login({setIsLoggedIn}) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
+
+    console.log(setIsLoggedIn)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,42 +21,17 @@ function Login() {
                 'https://projet-b3.onrender.com/api/loginManage',
                 { email, password },
                 {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     withCredentials: true,
                 }
             );
 
             if (response.status === 200) {
-                console.log('Connexion réussie', response.data);
+                console.log(response.data)
+                console.log('Connexion réussie', response.data.token);
+                localStorage.setItem('auth_token', response.data.token); 
+                setIsLoggedIn(true) 
                 navigate('/');
-                window.location.reload();
-            }
-        } catch (error) {
-            console.error(error);
-            if (error.response) {
-                setErrorMessage(error.response.data.message);
-            } else {
-                setErrorMessage('Erreur de réseau');
-            }
-        }
-    };
-
-    const handleForgotPassword = async () => {
-        try {
-            const response = await axios.post(
-                'https://projet-b3.onrender.com/api/forgot-password',
-                { email },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-
-            if (response.status === 200) {
-                setSuccessMessage('Un e-mail de réinitialisation a été envoyé à votre adresse.');
             }
         } catch (error) {
             console.error(error);
@@ -82,9 +59,9 @@ function Login() {
             );
 
             if (response.status === 200) {
-                console.log('Connexion Google réussie', response.data);
+                localStorage.setItem('auth_token',response.data.token);
+                setIsLoggedIn(true) 
                 navigate('/');
-                window.location.reload();
             }
         } catch (error) {
             console.error(error);
@@ -136,9 +113,9 @@ function Login() {
                             style={{ marginTop: '50px' }}
                         />
                     </GoogleOAuthProvider>
-                    <Link to="/inscription" className= "text-gray-800 px-4 py-2  hover:underline">
-                    Pas de compte ? Inscrivez-vous
-                    </Link> 
+                    <Link to="/inscription" className="text-gray-800 px-4 py-2 hover:underline">
+                        Pas de compte ? Inscrivez-vous
+                    </Link>
                 </section>
             </div>
         </div>

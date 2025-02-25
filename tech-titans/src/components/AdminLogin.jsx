@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const AdminLogin = () => {
+const AdminLogin = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -9,22 +9,23 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-
+  
     try {
       const response = await axios.post(
-       // "https://projet-b3.onrender.com/api/adminLogin",
-      "http://localhost:3002/api/adminLogin",
-        { email, password },
-        { withCredentials: true } // 👈 Envoie les cookies
+        "https://projet-b3.onrender.com/api/adminLogin",
+        { email, password }
       );
-
-      console.log("Connexion réussie :", response.data);
+  
+      const { token } = response.data;
+      localStorage.setItem("adminToken", token); // 🔥 Stockage sécurisé du token
+      console.log("Connexion réussie, token reçu :", token);
+  
       window.location.href = "/admin"; // Redirection après connexion réussie
     } catch (err) {
-      setError(err.response?.data?.message || "Une erreur s'est produite");
+      setError(err.response?.data?.message || "Erreur d'authentification.");
     }
   };
-
+  
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-lg">

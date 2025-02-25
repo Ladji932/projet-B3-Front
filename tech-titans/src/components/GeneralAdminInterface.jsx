@@ -2,25 +2,38 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const GeneralAdminInterface = ({fetchEvents , allEvents , setEvents}) => {
+const GeneralAdminInterface = ({ fetchEvents, allEvents, setEvents, getAdminToken }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  console.log(getAdminToken)
 
   const deleteEvent = async (eventId) => {
+    const authToken = getAdminToken ? getAdminToken() : null;
+
+    if (!authToken) {
+      setError("Authentification requise.");
+      return;
+    }
+
     try {
-      await axios.delete(`https://projet-b3.onrender.com/api/user/${eventId}`);
+      await axios.delete(`https://projet-b3.onrender.com/api/user/${eventId}`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+
       setEvents(allEvents.filter(event => event._id !== eventId));
-      fetchEvents()
+      fetchEvents();
       setSuccess('Événement supprimé avec succès.');
     } catch (err) {
-      setError('Erreur lors de la suppression de l\'événement.');
+      setError("Erreur lors de la suppression de l'événement.");
       console.error(err);
     }
   };
 
   const handleLogout = () => {
-    document.cookie = 'adminToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+    localStorage.removeItem("adminToken")
+    setSuccess("Déconnexion réussie.");
+    window.location.href = "/"; 
   };
 
   return (
@@ -29,19 +42,17 @@ const GeneralAdminInterface = ({fetchEvents , allEvents , setEvents}) => {
         onClick={handleLogout}
         className="absolute top-6 right-6 bg-red-500 text-white rounded-lg px-6 py-3 hover:bg-red-600 transition-colors duration-300"
       >
-        <Link to="/" className="text-white">Déconnexion</Link>
+        Déconnexion
       </button>
 
       <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">Liste des Événements</h1>
 
-      {/* Message de succès */}
       {success && (
         <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-xl shadow-lg">
           <span>{success}</span>
         </div>
       )}
 
-      {/* Message d'erreur */}
       {error && (
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-xl shadow-lg">
           <span>{error}</span>

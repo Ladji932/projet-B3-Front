@@ -53,8 +53,8 @@ function EventsPage({ allEvents }) {
     const authToken = getCookie("auth_token");
     if (authToken) {
       try {
-       // const response = await axios.get("http://localhost:3002/api/user-events"
-        const response = await axios.get("https://projet-b3.onrender.com/api/user-events"
+       const response = await axios.get("https://projet-b3.onrender.com/api/user-events"
+      //  const response = await axios.get("https://projet-b3.onrender.com/api/user-events"
         , {
           headers: { Authorization: `Bearer ${authToken}` },
           withCredentials: true,
@@ -144,8 +144,8 @@ function EventsPage({ allEvents }) {
     setActionLoading(true);
     const url =
       actionType === "participate"
-        ? `http://localhost:3002/api/participate/${userId}/${event._id}`
-        : `http://localhost:3002/api/withdraw/${userId}/${event._id}`;
+        ? `https://projet-b3.onrender.com/api/participate/${userId}/${event._id}`
+        : `https://projet-b3.onrender.com/api/withdraw/${userId}/${event._id}`;
         
     try {
       const response = await axios.post(url, {}, { headers: { Authorization: `Bearer ${authToken}` } });

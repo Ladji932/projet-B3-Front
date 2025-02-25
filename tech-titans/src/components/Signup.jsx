@@ -67,7 +67,7 @@ function Signup() {
     };
 
     try {
-      const response = await axios.post('https://projet-b3.onrender.com/api/fetchSignup', data);
+     const response = await axios.post('https://projet-b3.onrender.com/api/fetchSignup', data);
       //const response = await axios.post('http://localhost:3002/api/fetchSignup', data);
       setMessage('Inscription réussie !');
     } catch (error) {

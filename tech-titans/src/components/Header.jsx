@@ -10,10 +10,7 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
 
   useEffect(() => {
     const checkLoginStatus = () => {
-      const token = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("auth_token="))
-        ?.split("=")[1];
+      const token = localStorage.getItem("auth_token");
       setIsLoggedIn(!!token);
     };
 
@@ -31,7 +28,7 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
   );
 
   const handleLogout = () => {
-    document.cookie = "auth_token=; Max-Age=0";
+    localStorage.removeItem("auth_token");
     navigate("/");
     setIsLoggedIn(false);
   };

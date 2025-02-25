@@ -12,31 +12,34 @@ import CreateEventForm from './components/CreateEvent';
 import axios from 'axios';
 import GeneralAdminInterface from './components/GeneralAdminInterface';
 import AdminLogin from './components/AdminLogin';
-import Cookies from "js-cookie";
 import EditEvent from './components/EditEvent';
 import MentionLegal from './components/MentionLegal';
 import PolitiqueConfi from './components/PolitiqueConfi';
 import GestionCookies from './components/GestionCookies';
-import Footer from './components/Footer';  // Assure-toi que le chemin est correct
+import Footer from './components/Footer';
 
 function ProtectedRoute({ element, requiresAuthCheck = false, redirectTo = "/login" }) {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
+    const token = localStorage.getItem("adminToken");
+    
     if (!requiresAuthCheck) {
-      setIsAuthenticated(Cookies.get("auth_token") !== undefined);
+      setIsAuthenticated(token !== null);
       return;
     }
 
     const checkAuth = async () => {
       try {
-        await axios.get("https://projet-b3.onrender.com/api/checkAuth", { withCredentials: true });
-        //await axios.get("http://localhost:3002/api/checkAuth", { withCredentials: true });
+        await axios.get("https://projet-b3.onrender.com/api/checkAuth", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setIsAuthenticated(true);
       } catch {
         setIsAuthenticated(false);
       }
     };
+    
     checkAuth();
   }, [requiresAuthCheck]);
 
@@ -53,10 +56,8 @@ function Root() {
   const fetchEvents = useCallback(async () => {
     try {
       const response = await axios.get("https://projet-b3.onrender.com/api/fetch-events");
-     // const response = await axios.get("http://localhost:3002/api/fetch-events");
       const shuffledEvents = response.data.events.sort(() => 0.5 - Math.random());
       setEvents(shuffledEvents);
-      console.log(AllEvents);
     } catch (err) {
       console.error(err);
     }
@@ -66,13 +67,8 @@ function Root() {
     fetchEvents();
   }, [fetchEvents]);
 
-  const getCookie = name => {
-    const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-    return match ? match[2] : null;
-  };
-
-  const test = getCookie("auth_token")
-  console.log('cokkies  ',test)
+  const getToken = () => localStorage.getItem("auth_token");
+  const getAdminToken = () => localStorage.getItem("adminToken");
 
   const acceptCookies = () => setCookiesAccepted(true);
   const declineCookies = () => setCookiesAccepted(true);
@@ -80,16 +76,16 @@ function Root() {
   return (
     <BrowserRouter>
       <div>
-        <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} allEvents={AllEvents} />
+        <Header isLoggedIn={!!getToken()} setIsLoggedIn={setIsLoggedIn} allEvents={AllEvents} />
         <Routes>
-          <Route path="/" element={<Home allEvents={AllEvents} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} getCookie={getCookie} fetchEvents={fetchEvents}/>} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home allEvents={AllEvents} isLoggedIn={!!getToken()} setIsLoggedIn={setIsLoggedIn} getToken={getToken} fetchEvents={fetchEvents}/>} />
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/inscription" element={<Signup />} />
           <Route path="/AllEvent" element={<EventsPage allEvents={AllEvents} />} />
-          <Route path="/userDetails" element={<AdminPage />} />
+          <Route path="/userDetails" element={<AdminPage getToken={getToken} />} />
           <Route path="/results" element={<ResultsPage />} />
-          <Route path="/addEvent" element={<ProtectedRoute element={<CreateEventForm getCookie={getCookie} fetchEvents={fetchEvents} /> } />} />
-          <Route path="/admin" element={<ProtectedRoute element={<GeneralAdminInterface allEvents={AllEvents} setEvents={setEvents} fetchEvents={fetchEvents} />} requiresAuthCheck={true} redirectTo="/adminLogin" />} />
+          <Route path="/addEvent" element={<ProtectedRoute element={<CreateEventForm getToken={getToken} fetchEvents={fetchEvents} />} />} />
+          <Route path="/admin" element={<ProtectedRoute element={<GeneralAdminInterface getAdminToken={getAdminToken} allEvents={AllEvents} setEvents={setEvents} fetchEvents={fetchEvents} />} requiresAuthCheck={true} redirectTo="/adminLogin" />} />
           <Route path="/adminLogin" element={<AdminLogin />} />
           <Route path="/edit-event/:eventId" element={<EditEvent fetchEvents={fetchEvents} />} /> 
           <Route path="/MentionLegal" element={<MentionLegal />} />
@@ -102,7 +98,7 @@ function Root() {
 
         {/* Bannière des cookies */}
         {!cookiesAccepted && (
-            <div className="fixed bottom-0 left-0 w-full bg-black/30 backdrop-blur-md text-white z-50">
+          <div className="fixed bottom-0 left-0 w-full bg-black/30 backdrop-blur-md text-white z-50">
             <div className="max-w-7xl mx-auto p-4 sm:p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <p className="text-sm sm:text-base flex-grow max-w-3xl">
                 Ce site utilise des cookies pour améliorer l&apos;expérience utilisateur. Acceptez-vous les cookies ?

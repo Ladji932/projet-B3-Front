@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const CreateEventForm = ({ getCookie , fetchEvents }) => {
+const CreateEventForm = ({ getToken, fetchEvents }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -17,7 +17,14 @@ const CreateEventForm = ({ getCookie , fetchEvents }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false); // Loading state
 
-  const authToken = getCookie("auth_token");
+  // Récupération du token avec getToken()
+  const authToken = getToken ? getToken() : null;
+
+  if (!authToken) {
+    setError("Authentification requise.");
+    return null;
+  }
+
   const decodedToken = jwtDecode(authToken);
   const MailUser = decodedToken.email;
   const userId = decodedToken.userId;
@@ -36,8 +43,6 @@ const CreateEventForm = ({ getCookie , fetchEvents }) => {
     setMessage("");
     setError("");
     setLoading(true); // Start loading
-
-   
 
     const form = new FormData();
     form.append("title", formData.title);
@@ -59,10 +64,15 @@ const CreateEventForm = ({ getCookie , fetchEvents }) => {
 
     try {
       const response = await axios.post(
-        //"https://projet-b3.onrender.com/api/createEvent",
-        "http://localhost:3002/api/createEvent",
+        "https://projet-b3.onrender.com/api/createEvent",
+        //"http://localhost:3002/api/createEvent",
         form,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: { 
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${authToken}` // Ajout du token dans l'en-tête
+          }
+        }
       );
 
       setMessage(response.data.message);
@@ -75,7 +85,7 @@ const CreateEventForm = ({ getCookie , fetchEvents }) => {
         location: "",
         image: null,
       });
-      fetchEvents()
+      fetchEvents();
     } catch (err) {
       setError(err.response?.data?.message || "Une erreur est survenue.");
     } finally {
@@ -125,13 +135,15 @@ const CreateEventForm = ({ getCookie , fetchEvents }) => {
             <option value="gastronomie">Gastronomie</option>
           </select>
           <input
-            type="date"
-            name="dateEvent"
-            value={formData.dateEvent}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+  type="date"
+  name="dateEvent"
+  value={formData.dateEvent}
+  onChange={handleChange}
+  required
+  min={new Date().toISOString().split("T")[0]} // Définit la date minimale comme aujourd'hui
+  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+/>
+
           <input
             type="text"
             name="location"

@@ -1,19 +1,19 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
-const AdminPage = () => {
+const AdminPage = ({ getToken }) => {
+  console.log(getToken)
   const [adminData, setAdminData] = useState(null);
   const [participatedEvents, setParticipatedEvents] = useState([]);
   const [createdEvents, setCreatedEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true); 
 
-  const token = Cookies.get('auth_token');
+  const token = getToken(); // Utilisation de getToken au lieu de Cookies.get
   if (!token) {
     console.log("Utilisateur non identifié. Veuillez vous connecter.");
-    return;
+    return null; // Retourner null pour ne rien afficher si l'utilisateur n'est pas connecté
   }
 
   const decodedToken = jwtDecode(token);
@@ -23,7 +23,7 @@ const AdminPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const request = await axios.get(`http://localhost:3002/api/fetch-user/${idUser}`);
+        const request = await axios.get(`https://projet-b3.onrender.com/api/fetch-user/${idUser}`);
         setAdminData(request.data[0]);
 
         const userEmail = request.data[0].email;
@@ -43,7 +43,7 @@ const AdminPage = () => {
 
   const fetchParticipatedEvents = async (eventIds) => {
     try {
-      const response = await axios.post("http://localhost:3002/api/fetch-user-events", { eventIds });
+      const response = await axios.post("https://projet-b3.onrender.com/api/fetch-user-events", { eventIds });
       const transformedEvents = response.data.map((event) => ({
         ...event,
         imageUrl: `data:image/jpeg;base64,${btoa(
@@ -53,14 +53,14 @@ const AdminPage = () => {
       setParticipatedEvents(transformedEvents);
       setIsLoading(false);
     } catch (error) {
-      console.log("Erreur lors du fetch des événements auxquels l'utilisateur participé:", error);
+      console.log("Erreur lors du fetch des événements auxquels l'utilisateur a participé:", error);
       setIsLoading(false);
     }
   };
   
   const fetchCreatedEvents = async (userEmail) => {
     try {
-      const response = await axios.get(`http://localhost:3002/api/fetch-created-events/${userEmail}`);
+      const response = await axios.get(`https://projet-b3.onrender.com/api/fetch-created-events/${userEmail}`);
       const transformedEvents = response.data.map((event) => ({
         ...event,
         imageUrl: `data:image/jpeg;base64,${btoa(
@@ -77,7 +77,7 @@ const AdminPage = () => {
 
   const handleDeleteEvent = async (eventId) => {
     try {
-      await axios.delete(`http://localhost:3002/api/event/${eventId}`, {
+      await axios.delete(`https://projet-b3.onrender.com/api/event/${eventId}`, {
         data: { userId: idUser },
       });
 
