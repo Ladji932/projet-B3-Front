@@ -18,16 +18,12 @@ import PolitiqueConfi from './components/PolitiqueConfi';
 import GestionCookies from './components/GestionCookies';
 import Footer from './components/Footer';
 
-function ProtectedRoute({ element, requiresAuthCheck = false, redirectTo = "/login" }) {
+
+function UserProtectedRoute({ element, redirectTo = "/login" }) {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
-    
-    if (!requiresAuthCheck) {
-      setIsAuthenticated(token !== null);
-      return;
-    }
 
     const checkAuth = async () => {
       try {
@@ -39,11 +35,45 @@ function ProtectedRoute({ element, requiresAuthCheck = false, redirectTo = "/log
         setIsAuthenticated(false);
       }
     };
-    
-    checkAuth();
-  }, [requiresAuthCheck]);
 
-  if (isAuthenticated === null) return <div>Pas connecté</div>;
+    if (token) {
+      checkAuth();
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+
+  if (isAuthenticated === null) return <div>Vérification...</div>;
+
+  return isAuthenticated ? element : <Navigate to={redirectTo} replace />;
+}
+
+function AdminProtectedRoute({ element, redirectTo = "/adminLogin" }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("adminToken");
+    console.log(token)
+
+    const checkAuth = async () => {
+      try {
+        await axios.get("https://projet-b3.onrender.com/api/checkAuth", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setIsAuthenticated(true);
+      } catch {
+        setIsAuthenticated(false);
+      }
+    };
+
+    if (token) {
+      checkAuth();
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+
+  if (isAuthenticated === null) return <div>Vérification...</div>;
 
   return isAuthenticated ? element : <Navigate to={redirectTo} replace />;
 }
@@ -84,8 +114,8 @@ function Root() {
           <Route path="/AllEvent" element={<EventsPage allEvents={AllEvents} fetchEvents={fetchEvents} getToken={getToken}/>} />
           <Route path="/userDetails" element={<AdminPage getToken={getToken} />} />
           <Route path="/results" element={<ResultsPage />} />
-          <Route path="/addEvent" element={<ProtectedRoute element={<CreateEventForm getToken={getToken} fetchEvents={fetchEvents} />} />} />
-          <Route path="/admin" element={<ProtectedRoute element={<GeneralAdminInterface getAdminToken={getAdminToken} allEvents={AllEvents} setEvents={setEvents} fetchEvents={fetchEvents} />} requiresAuthCheck={true} redirectTo="/adminLogin" />} />
+          <Route path="/addEvent" element={<UserProtectedRoute element={<CreateEventForm getToken={getToken} fetchEvents={fetchEvents} />} />} />
+          <Route path="/admin" element={<AdminProtectedRoute element={<GeneralAdminInterface getAdminToken={getAdminToken} allEvents={AllEvents} setEvents={setEvents} fetchEvents={fetchEvents} />} requiresAuthCheck={true} redirectTo="/adminLogin" />} />
           <Route path="/adminLogin" element={<AdminLogin />} />
           <Route path="/edit-event/:eventId" element={<EditEvent fetchEvents={fetchEvents} />} /> 
           <Route path="/MentionLegal" element={<MentionLegal />} />
