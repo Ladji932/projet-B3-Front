@@ -1,8 +1,7 @@
 {
   "name": "my-vite-app",
   "private": true,
-  "homepage": ".",
-  "version": "0.0.0",
+  "homepage": "https://projet-b3-front.vercel.app/",
   "type": "module",
   "scripts": {
     "dev": "vite",
