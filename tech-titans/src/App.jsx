@@ -121,7 +121,8 @@ function Root() {
           <Route path="/MentionLegal" element={<MentionLegal />} />
           <Route path="/PolitiqueConfi" element={<PolitiqueConfi />} />
           <Route path="/GestionCookies" element={<GestionCookies />} />
-        </Routes>
+          <Route path='/*' element={<Home allEvents={AllEvents} isLoggedIn={!!getToken()} setIsLoggedIn={setIsLoggedIn} getToken={getToken} fetchEvents={fetchEvents} />} />
+          </Routes>
 
         {/* Intégration du Footer */}
         <Footer />
