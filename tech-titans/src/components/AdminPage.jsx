@@ -107,15 +107,7 @@ const AdminPage = ({ getToken }) => {
               <p className="font-semibold text-teal-600">Email :</p>
               <p className="text-lg text-gray-800">{adminData.email}</p>
             </div>
-            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-              <p className="font-semibold text-teal-600">Numéro de téléphone :</p>
-              <p className="text-lg text-gray-800">0{adminData.phoneNumber}</p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-              <p className="font-semibold text-teal-600">Rôle :</p>
-              <p className="text-lg text-gray-800">{adminData.role}</p>
-            </div>
-
+          
             <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
               <p className="font-semibold text-teal-600">Événements auxquels vous participez :</p>
               <ul className="grid gap-4 sm:grid-cols-2">

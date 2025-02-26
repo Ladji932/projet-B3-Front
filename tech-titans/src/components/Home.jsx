@@ -15,6 +15,11 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getToken, fetchEvents }) {
 
   const authToken = getToken("auth_token");
 
+  if (authToken) {
+    console.log("présent")
+  }else{
+    console.log("non")
+  }
 
   // ======================== FETCH USER EVENTS ========================//
   const fetchUserEvents = async () => {
@@ -134,18 +139,18 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getToken, fetchEvents }) {
       {/* ======================== POPUP ======================== */}
       {popup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
-          <div className="bg-black p-6 rounded-lg shadow-lg text-center max-w-sm w-full">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-sm w-full">
             <img
               src={popup.event.image}
               alt=""
               className="w-full h-40 object-cover rounded"
             />
-            <h3 className="text-lg font-bold mt-4">
+            <h3 className="text-lg font-bold mt-4 text-black">
               {popup.type === "participate"
                 ? "Confirmer la participation"
                 : "Confirmer le désistement"}
             </h3>
-            <p className="mt-4">
+            <p className="mt-4 text-black">
               {popup.type === "participate"
                 ? `Êtes-vous sûr de vouloir participer à l'événement "${popup.event.title}" ?`
                 : `Êtes-vous sûr de vouloir vous désinscrire de l'événement "${popup.event.title}" ?`}
@@ -160,7 +165,7 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getToken, fetchEvents }) {
               <button
                 onClick={confirmAction}
                 className={`px-4 py-2 rounded-lg text-white ${
-                  actionLoading ? "bg-gray-500" : "bg-blue-500 hover:bg-blue-600"
+                  actionLoading ? "bg-gray-500" : "bg-blue-600 hover:bg-blue-700"
                 }`}
                 disabled={actionLoading}
               >
@@ -247,7 +252,7 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getToken, fetchEvents }) {
         </h2>
         <div className="relative">
           {!allEvents.length ? (
-            <p className="text-center text-lg text-gray-500">Aucun événement disponible.</p>
+            <p className="text-center text-lg text-white">Aucun événement disponible.</p>
           ) : allEvents.length > 0 ? (
             <Slider
               {...{
@@ -280,8 +285,8 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getToken, fetchEvents }) {
                         <button
                           className={`px-4 py-2 rounded-lg text-white ${
                             isParticipating
-                              ? "bg-red-500 hover:bg-red-600"
-                              : "bg-green-500 hover:bg-green-600"
+                              ? "bg-red-700 hover:bg-red-800"
+                              : "bg-green-700 hover:bg-green-800"
                           }`}
                           onClick={() =>
                             handlePopup(event, isParticipating ? "withdraw" : "participate")

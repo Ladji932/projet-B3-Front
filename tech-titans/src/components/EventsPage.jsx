@@ -10,7 +10,7 @@ import "../../style/calendar.css";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 
-function EventsPage({ allEvents }) {
+function EventsPage({ allEvents , fetchEvents , getToken }) {
   const [error, setError] = useState("");
   const [view, setView] = useState("calendar");
   const [selectedDate, setSelectedDate] = useState(null);
@@ -44,17 +44,12 @@ function EventsPage({ allEvents }) {
     "voyage"
   ];
 
-  const getCookie = name => {
-    const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-    return match ? match[2] : null;
-  };
 
   const fetchUserEvents = async () => {
-    const authToken = getCookie("auth_token");
+    const authToken = getToken("auth_token");
     if (authToken) {
       try {
        const response = await axios.get("https://projet-b3.onrender.com/api/user-events"
-      //  const response = await axios.get("https://projet-b3.onrender.com/api/user-events"
         , {
           headers: { Authorization: `Bearer ${authToken}` },
           withCredentials: true,
@@ -93,6 +88,9 @@ function EventsPage({ allEvents }) {
     });
   };
 
+
+
+
   const openEventPopup = (date) => {
     const dailyEvents = filterEventsByDate(date);
     if (dailyEvents.length > 0) {
@@ -124,7 +122,7 @@ function EventsPage({ allEvents }) {
   };
 
   const handleParticipation = async (event, actionType) => {
-    const authToken = getCookie("auth_token");
+    const authToken = getToken("auth_token");
     if (!authToken) {
       console.log("Utilisateur non connecté.");
       closePopup();
@@ -267,23 +265,23 @@ function EventsPage({ allEvents }) {
                         {new Date(event.dateEvent).toLocaleString()}
                       </p>
 
-                      {getCookie("auth_token") && (
-  isParticipating ? (
-    <button
-      onClick={() => handleParticipation(event, "withdraw")}
-      className="mt-4 px-4 py-2 rounded-lg bg-red-500 text-white"
-    >
-      Se désinscrire
-    </button>
-  ) : (
-    <button
-      onClick={() => handleParticipation(event, "participate")}
-      className="mt-4 px-4 py-2 rounded-lg bg-green-500 text-white"
-    >
-      Participer
-    </button>
-  )
-)}
+                      {getToken("auth_token") && (
+                     isParticipating ? (
+                      <button
+                       onClick={() => handleParticipation(event, "withdraw")}
+                       className="mt-4 px-4 py-2 rounded-lg bg-red-500 text-white"
+                         >
+                        Se désinscrire
+                     </button>
+                    ) : (
+                   <button
+                  onClick={() => handleParticipation(event, "participate")}
+                  className="mt-4 px-4 py-2 rounded-lg bg-green-500 text-white"
+                    >
+                    Participer
+                    </button>
+                     )
+                        )}
                     </div>
                   </div>
                 );
@@ -318,7 +316,7 @@ function EventsPage({ allEvents }) {
               <p><strong>Lieu:</strong> {eventData.location}</p>
               <p><strong>Créé par:</strong> {eventData.createdBy}</p>
 
-              {getCookie("auth_token") && (
+              {getToken("auth_token") && (
   <div className="flex justify-center mt-4">
     {actionLoading ? (
       <p>Chargement...</p>

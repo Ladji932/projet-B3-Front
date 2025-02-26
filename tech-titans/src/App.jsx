@@ -22,7 +22,7 @@ function ProtectedRoute({ element, requiresAuthCheck = false, redirectTo = "/log
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("adminToken");
+    const token = localStorage.getItem("auth_token");
     
     if (!requiresAuthCheck) {
       setIsAuthenticated(token !== null);
@@ -81,7 +81,7 @@ function Root() {
           <Route path="/" element={<Home allEvents={AllEvents} isLoggedIn={!!getToken()} setIsLoggedIn={setIsLoggedIn} getToken={getToken} fetchEvents={fetchEvents}/>} />
           <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/inscription" element={<Signup />} />
-          <Route path="/AllEvent" element={<EventsPage allEvents={AllEvents} />} />
+          <Route path="/AllEvent" element={<EventsPage allEvents={AllEvents} fetchEvents={fetchEvents} getToken={getToken}/>} />
           <Route path="/userDetails" element={<AdminPage getToken={getToken} />} />
           <Route path="/results" element={<ResultsPage />} />
           <Route path="/addEvent" element={<ProtectedRoute element={<CreateEventForm getToken={getToken} fetchEvents={fetchEvents} />} />} />
