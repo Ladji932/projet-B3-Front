@@ -19,10 +19,11 @@ const AdminLogin = ({ setToken }) => {
       );
   
       const { token } = response.data;
-      localStorage.setItem("adminToken", token); // 🔥 Stockage sécurisé du token
+      localStorage.setItem("adminToken", token); 
       console.log("Connexion réussie, token reçu :", token);
   
-      navigate("/admin");    } catch (err) {
+      navigate("/#/admin");
+     } catch (err) {
       setError(err.response?.data?.message || "Erreur d'authentification.");
     }
   };
