@@ -2,8 +2,11 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { ThemeContext } from "../ThemeContext";
 
 function Signup() {
+  const { isDarkMode } = useContext(ThemeContext);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +17,7 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (password !== confirmPassword) {
       setMessage('Les mots de passe ne correspondent pas.');
       setSuccess(false);
@@ -39,8 +42,8 @@ function Signup() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black px-4 sm:px-8 md:px-16">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div className={isDarkMode ? 'bg-gray-900 text-white flex items-center justify-center min-h-screen' : 'bg-gray-50 text-black flex items-center justify-center min-h-screen'}>
+      <div className={isDarkMode ? 'bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md' : 'bg-white p-8 rounded-lg shadow-lg w-full max-w-md border border-gray-300'}>
         <h1 className="text-3xl font-semibold text-center text-indigo-600 mb-6">Inscription</h1>
         {message && (
           <div className={`mb-4 text-center ${success ? 'text-green-600' : 'text-red-600'}`}>{message}</div>
@@ -53,7 +56,7 @@ function Signup() {
               placeholder="Nom d'utilisateur"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className={isDarkMode ? 'w-full p-4 border border-gray-600 rounded-md bg-gray-700 text-white shadow-md' : 'w-full p-4 border border-gray-300 rounded-md bg-gray-100 shadow-md'}
               required
             />
           </div>
@@ -64,7 +67,7 @@ function Signup() {
               placeholder="Adresse mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className={isDarkMode ? 'w-full p-4 border border-gray-600 rounded-md bg-gray-700 text-white shadow-md' : 'w-full p-4 border border-gray-300 rounded-md bg-gray-100 shadow-md'}
               required
             />
           </div>
@@ -75,7 +78,7 @@ function Signup() {
               placeholder="Mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className={isDarkMode ? 'w-full p-4 border border-gray-600 rounded-md bg-gray-700 text-white shadow-md' : 'w-full p-4 border border-gray-300 rounded-md bg-gray-100 shadow-md'}
               required
             />
             <button
@@ -93,18 +96,18 @@ function Signup() {
               placeholder="Confirmez le mot de passe"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className={isDarkMode ? 'w-full p-4 border border-gray-600 rounded-md bg-gray-700 text-white shadow-md' : 'w-full p-4 border border-gray-300 rounded-md bg-gray-100 shadow-md'}
               required
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white p-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className={isDarkMode ? 'w-full bg-indigo-600 text-white p-4 rounded-md hover:bg-indigo-500 shadow-md' : 'w-full bg-indigo-600 text-white p-4 rounded-md hover:bg-indigo-700 shadow-md'}
           >
             Envoyer
           </button>
         </form>
-        <Link to="/inscription" className="text-gray-800 px-4 py-2 hover:underline">
+        <Link to="/connexion" className={isDarkMode ? 'text-gray-300 px-4 py-2 hover:underline' : 'text-gray-800 px-4 py-2 hover:underline'}>
           Vous avez déjà un compte ? Connectez-vous
         </Link>
       </div>

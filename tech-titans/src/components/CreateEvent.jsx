@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { ThemeContext } from "../ThemeContext"; // Import du ThemeContext
 
 const CreateEventForm = ({ getToken, fetchEvents }) => {
+  const { isDarkMode } = useContext(ThemeContext); // Utilisation du ThemeContext
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -65,7 +68,6 @@ const CreateEventForm = ({ getToken, fetchEvents }) => {
     try {
       const response = await axios.post(
         "https://projet-b3.onrender.com/api/createEvent",
-        //"http://localhost:3002/api/createEvent",
         form,
         {
           headers: { 
@@ -94,9 +96,9 @@ const CreateEventForm = ({ getToken, fetchEvents }) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Créer un Événement</h2>
+    <div className={`flex items-center justify-center min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <div className={`max-w-2xl mx-auto p-6 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'} shadow-lg rounded-lg`}>
+        <h2 className="text-2xl font-bold mb-4">Créer un Événement</h2>
         {loading && <div className="loading-cube"></div>} {/* Show loading animation */}
         {message && <p className="text-green-600">{message}</p>}
         {error && <p className="text-red-600">{error}</p>}
@@ -109,7 +111,7 @@ const CreateEventForm = ({ getToken, fetchEvents }) => {
             value={formData.title}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${isDarkMode ? 'border-gray-600 bg-gray-700 text-white focus:ring-blue-500' : 'border-gray-300 bg-white text-black focus:ring-blue-500'}`}
           />
           <textarea
             name="description"
@@ -117,14 +119,14 @@ const CreateEventForm = ({ getToken, fetchEvents }) => {
             value={formData.description}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${isDarkMode ? 'border-gray-600 bg-gray-700 text-white focus:ring-blue-500' : 'border-gray-300 bg-white text-black focus:ring-blue-500'}`}
           />
           <select
             name="category"
             value={formData.category}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${isDarkMode ? 'border-gray-600 bg-gray-700 text-white focus:ring-blue-500' : 'border-gray-300 bg-white text-black focus:ring-blue-500'}`}
           >
             <option value="">Sélectionner une catégorie</option>
             <option value="culturel">Culturel</option>
@@ -135,14 +137,14 @@ const CreateEventForm = ({ getToken, fetchEvents }) => {
             <option value="gastronomie">Gastronomie</option>
           </select>
           <input
-  type="date"
-  name="dateEvent"
-  value={formData.dateEvent}
-  onChange={handleChange}
-  required
-  min={new Date().toISOString().split("T")[0]} // Définit la date minimale comme aujourd'hui
-  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-/>
+            type="date"
+            name="dateEvent"
+            value={formData.dateEvent}
+            onChange={handleChange}
+            required
+            min={new Date().toISOString().split("T")[0]} // Définit la date minimale comme aujourd'hui
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${isDarkMode ? 'border-gray-600 bg-gray-700 text-white focus:ring-blue-500' : 'border-gray-300 bg-white text-black focus:ring-blue-500'}`}
+          />
 
           <input
             type="text"
@@ -151,7 +153,7 @@ const CreateEventForm = ({ getToken, fetchEvents }) => {
             value={formData.location}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${isDarkMode ? 'border-gray-600 bg-gray-700 text-white focus:ring-blue-500' : 'border-gray-300 bg-white text-black focus:ring-blue-500'}`}
           />
           <input
             type="file"
@@ -159,11 +161,11 @@ const CreateEventForm = ({ getToken, fetchEvents }) => {
             accept="image/*"
             onChange={handleFileChange}
             required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${isDarkMode ? 'border-gray-600 bg-gray-700 text-white focus:ring-blue-500' : 'border-gray-300 bg-white text-black focus:ring-blue-500'}`}
           />
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+            className={`w-full py-2 rounded-lg hover:opacity-80 transition duration-300 ${isDarkMode ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'}`}
           >
             Créer l'événement
           </button>

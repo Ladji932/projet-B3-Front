@@ -1,17 +1,17 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { ThemeContext } from "../ThemeContext";
 
-function Login({setIsLoggedIn}) {
+function Login({ setIsLoggedIn }) {
+    const { isDarkMode } = useContext(ThemeContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
-
-    console.log(setIsLoggedIn)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,14 +27,11 @@ function Login({setIsLoggedIn}) {
             );
 
             if (response.status === 200) {
-                console.log(response.data)
-                console.log('Connexion réussie', response.data.token);
-                localStorage.setItem('auth_token', response.data.token); 
-                setIsLoggedIn(true) 
+                localStorage.setItem('auth_token', response.data.token);
+                setIsLoggedIn(true);
                 navigate('/');
             }
         } catch (error) {
-            console.error(error);
             if (error.response) {
                 setErrorMessage(error.response.data.message);
             } else {
@@ -59,29 +56,27 @@ function Login({setIsLoggedIn}) {
             );
 
             if (response.status === 200) {
-                localStorage.setItem('auth_token',response.data.token);
-                setIsLoggedIn(true) 
+                localStorage.setItem('auth_token', response.data.token);
+                setIsLoggedIn(true);
                 navigate('/');
             }
         } catch (error) {
-            console.error(error);
             setErrorMessage('Erreur lors de la connexion avec Google.');
         }
     };
 
     const handleGoogleFailure = (error) => {
-        console.error('Erreur Google:', error);
         setErrorMessage('Erreur lors de la connexion avec Google.');
     };
 
     return (
-        <div className="login bg-black flex flex-col h-screen">
-            <div className="bg-white p-8 justify-center rounded-lg shadow-lg my-auto mx-auto w-full max-w-md">
+        <div className={isDarkMode ? 'bg-gray-900 text-white flex flex-col h-screen' : 'bg-gray-50 text-black flex flex-col h-screen'}>
+            <div className={isDarkMode ? 'bg-gray-800 p-8 justify-center rounded-lg shadow-lg my-auto mx-auto w-full max-w-md' : 'bg-white p-8 justify-center rounded-lg shadow-lg my-auto mx-auto w-full max-w-md border border-gray-300'}>
                 <section className="flex flex-col items-center justify-center flex-grow">
-                    <h1 className="text-2xl text-black font-bold mb-6">Connexion</h1>
+                    <h1 className="text-2xl font-bold mb-6">Connexion</h1>
                     <form className="flex flex-col gap-4 w-full max-w-md" onSubmit={handleSubmit}>
                         <input
-                            className="border border-gray-300 rounded-lg px-4 py-2"
+                            className={isDarkMode ? 'border border-gray-600 rounded-lg px-4 py-2 bg-gray-700 text-white shadow-md' : 'border border-gray-300 rounded-lg px-4 py-2 bg-gray-100 shadow-md'}
                             type="text"
                             name="email"
                             value={email}
@@ -89,7 +84,7 @@ function Login({setIsLoggedIn}) {
                             placeholder="adresse mail"
                         />
                         <input
-                            className="border border-gray-300 rounded-lg px-4 py-2"
+                            className={isDarkMode ? 'border border-gray-600 rounded-lg px-4 py-2 bg-gray-700 text-white shadow-md' : 'border border-gray-300 rounded-lg px-4 py-2 bg-gray-100 shadow-md'}
                             type="password"
                             name="password"
                             value={password}
@@ -97,7 +92,7 @@ function Login({setIsLoggedIn}) {
                             placeholder="mot de passe"
                         />
                         <button
-                            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                            className={isDarkMode ? 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 shadow-md' : 'bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 shadow-md'}
                             type="submit"
                         >
                             Envoyer
@@ -113,7 +108,7 @@ function Login({setIsLoggedIn}) {
                             style={{ marginTop: '50px' }}
                         />
                     </GoogleOAuthProvider>
-                    <Link to="/inscription" className="text-gray-800 px-4 py-2 hover:underline">
+                    <Link to="/inscription" className={isDarkMode ? 'text-gray-300 px-4 py-2 hover:underline' : 'text-gray-800 px-4 py-2 hover:underline'}>
                         Pas de compte ? Inscrivez-vous
                     </Link>
                 </section>

@@ -27,10 +27,15 @@ function UserProtectedRoute({ element, redirectTo = "/login" }) {
 
     const checkAuth = async () => {
       try {
-        await axios.get("https://projet-b3.onrender.com/api/checkAuth", {
+        const { data } = await axios.get("http://localhost:3002/api/checkAuth", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setIsAuthenticated(true);
+
+        if (data.role === "user") {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
       } catch {
         setIsAuthenticated(false);
       }
@@ -48,29 +53,44 @@ function UserProtectedRoute({ element, redirectTo = "/login" }) {
   return isAuthenticated ? element : <Navigate to={redirectTo} replace />;
 }
 
+
 function AdminProtectedRoute({ element, redirectTo = "/adminLogin" }) {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
-    console.log(token)
+    console.log("🔹 Token admin récupéré depuis localStorage :", token);
+
+    if (!token) {
+      console.log("❌ Aucun token admin trouvé");
+      setIsAuthenticated(false);
+      return;
+    }
+
+    console.log("🔹 Envoi de la requête d'authentification admin...");
 
     const checkAuth = async () => {
       try {
-        await axios.get("https://projet-b3.onrender.com/api/checkAuth", {
+        const response = await axios.get("http://localhost:3002/api/checkAuth", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setIsAuthenticated(true);
-      } catch {
+
+        console.log("✅ Réponse du serveur :", response.data);
+
+        if (response.data.role === "admin") {
+          console.log("✅ Accès admin autorisé");
+          setIsAuthenticated(true);
+        } else {
+          console.log("❌ Accès refusé : rôle incorrect");
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.log("❌ Erreur d'authentification admin :", error.response?.data || error.message);
         setIsAuthenticated(false);
       }
     };
 
-    if (token) {
-      checkAuth();
-    } else {
-      setIsAuthenticated(false);
-    }
+    checkAuth();
   }, []);
 
   if (isAuthenticated === null) return <div>Vérification...</div>;
@@ -82,6 +102,12 @@ function Root() {
   const [AllEvents, setEvents] = useState([]);
   const [cookiesAccepted, setCookiesAccepted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [theme, setTheme] = useState("light");
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
+  
 
   const fetchEvents = useCallback(async () => {
     try {
@@ -106,7 +132,7 @@ function Root() {
   return (
     <HashRouter>
       <div>
-        <Header isLoggedIn={!!getToken()} setIsLoggedIn={setIsLoggedIn} allEvents={AllEvents} />
+        <Header isLoggedIn={!!getToken()} setIsLoggedIn={setIsLoggedIn} allEvents={AllEvents} toggleTheme={toggleTheme}  />
         <Routes>
           <Route path="/" element={<Home allEvents={AllEvents} isLoggedIn={!!getToken()} setIsLoggedIn={setIsLoggedIn} getToken={getToken} fetchEvents={fetchEvents}/>} />
           <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
