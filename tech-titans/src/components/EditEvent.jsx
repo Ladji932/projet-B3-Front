@@ -116,9 +116,16 @@ const EditEvent = ({fetchEvents}) => {
             <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} className="border border-gray-300 rounded-lg p-2 w-full" required />
           </div>
           <div>
-            <label className="block text-gray-700">Date de l'événement :</label>
-            <input type="date" value={dateEvent} min={new Date().toISOString().split("T")[0]} onChange={(e) => setDateEvent(e.target.value)} className="border border-gray-300 rounded-lg p-2 w-full" required />
-          </div>
+  <label className="block text-gray-700">Date et heure de l'événement :</label>
+  <input 
+    type="datetime-local" 
+    value={dateEvent} 
+    min={new Date().toISOString().slice(0, 16)} 
+    onChange={(e) => setDateEvent(e.target.value)} 
+    className="border border-gray-300 rounded-lg p-2 w-full" 
+    required 
+  />
+</div>
           <div>
             <label className="block text-gray-700">Image :</label>
             <input type="file" onChange={(e) => setImage(e.target.files[0])} className="border border-gray-300 rounded-lg p-2 w-full" />

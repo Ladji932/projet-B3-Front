@@ -137,14 +137,16 @@ const CreateEventForm = ({ getToken, fetchEvents }) => {
             <option value="gastronomie">Gastronomie</option>
           </select>
           <input
-            type="date"
-            name="dateEvent"
-            value={formData.dateEvent}
-            onChange={handleChange}
-            required
-            min={new Date().toISOString().split("T")[0]} // Définit la date minimale comme aujourd'hui
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${isDarkMode ? 'border-gray-600 bg-gray-700 text-white focus:ring-blue-500' : 'border-gray-300 bg-white text-black focus:ring-blue-500'}`}
-          />
+  type="datetime-local"
+  name="dateEvent"
+  value={formData.dateEvent}
+  onChange={handleChange}
+  required
+  min={new Date().toISOString().slice(0, 16)} 
+  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+    isDarkMode ? 'border-gray-600 bg-gray-700 text-white focus:ring-blue-500' : 'border-gray-300 bg-white text-black focus:ring-blue-500'
+  }`}
+/>
 
           <input
             type="text"
