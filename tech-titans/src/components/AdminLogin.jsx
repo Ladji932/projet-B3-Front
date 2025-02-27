@@ -1,12 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const AdminLogin = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,8 +20,8 @@ const AdminLogin = ({ setToken }) => {
       localStorage.setItem("adminToken", token); 
       console.log("Connexion réussie, token reçu :", token);
   
-      navigate("/#/admin");
-     } catch (err) {
+      window.location.hash = "#/admin";
+       } catch (err) {
       setError(err.response?.data?.message || "Erreur d'authentification.");
     }
   };
