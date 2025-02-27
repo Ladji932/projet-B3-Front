@@ -15,6 +15,26 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getToken, fetchEvents }) {
   const [userEvents, setUserEvents] = useState([]);
   const [popup, setPopup] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [testimonials] = useState([
+    {
+      name: "Sophie Martin",
+      role: "Organisatrice d'événements",
+      text: "Cette plateforme a révolutionné ma façon d'organiser des événements. L'interface est intuitive et les fonctionnalités sont exactement ce dont j'avais besoin.",
+      avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+    },
+    {
+      name: "Thomas Dubois",
+      role: "Participant régulier",
+      text: "Je trouve tous les événements qui m'intéressent facilement. Le processus d'inscription est simple et rapide. Je recommande vivement !",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg"
+    },
+    {
+      name: "Émilie Rousseau",
+      role: "Responsable marketing",
+      text: "Nous utilisons cette plateforme pour tous nos événements d'entreprise. La gestion des participants est devenue un jeu d'enfant.",
+      avatar: "https://randomuser.me/api/portraits/women/68.jpg"
+    }
+  ]);
 
   const authToken = getToken("auth_token");
 
@@ -132,6 +152,17 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getToken, fetchEvents }) {
     ],
   };
 
+  const testimonialSettings = {
+    dots: true,
+    infinite: true,
+    speed: 800,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    pauseOnHover: true,
+  };
+
   return (
     <div className={isDarkMode 
       ? 'bg-gradient-to-b from-gray-900 to-gray-800 min-h-screen overflow-x-hidden text-gray-100' 
@@ -220,8 +251,40 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getToken, fetchEvents }) {
         </Link>
       </main>
 
+      {/* ======================== SECTION STATISTIQUES ======================== */}
+      <section className="container mx-auto px-4 mt-16 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className={`p-6 rounded-xl shadow-lg text-center ${
+            isDarkMode 
+              ? 'bg-gradient-to-br from-purple-900 to-indigo-900 border border-gray-700' 
+              : 'bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100'
+          } transform transition-all duration-300 hover:scale-105`}>
+            <div className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">500+</div>
+            <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'} font-medium`}>Événements organisés</p>
+          </div>
+          
+          <div className={`p-6 rounded-xl shadow-lg text-center ${
+            isDarkMode 
+              ? 'bg-gradient-to-br from-purple-900 to-indigo-900 border border-gray-700' 
+              : 'bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100'
+          } transform transition-all duration-300 hover:scale-105`}>
+            <div className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">10 000+</div>
+            <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'} font-medium`}>Participants satisfaits</p>
+          </div>
+          
+          <div className={`p-6 rounded-xl shadow-lg text-center ${
+            isDarkMode 
+              ? 'bg-gradient-to-br from-purple-900 to-indigo-900 border border-gray-700' 
+              : 'bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100'
+          } transform transition-all duration-300 hover:scale-105`}>
+            <div className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">98%</div>
+            <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'} font-medium`}>Taux de satisfaction</p>
+          </div>
+        </div>
+      </section>
+
       {/* ======================== SECTION POURQUOI CHOISIR ? ======================== */}
-      <section className="container mx-auto px-4 mt-28 max-w-6xl">
+      <section className="container mx-auto px-4 mt-20 max-w-6xl">
         <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
           Pourquoi choisir notre plateforme ?
         </h2>
@@ -277,10 +340,70 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getToken, fetchEvents }) {
         </div>
       </section>
 
+      {/* ======================== SECTION FONCTIONNALITÉS ======================== */}
+      <section className="container mx-auto px-4 mt-20 max-w-6xl">
+        <div className={`rounded-2xl overflow-hidden shadow-xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className={`p-8 ${isDarkMode ? 'bg-gradient-to-r from-blue-900 to-indigo-900' : 'bg-gradient-to-r from-blue-600 to-indigo-600'} text-white`}>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2">Fonctionnalités principales</h2>
+            <p className="opacity-90">Tout ce dont vous avez besoin pour gérer vos événements</p>
+          </div>
+          
+          <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className={`p-4 rounded-lg flex items-start space-x-4 ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-blue-50'} transition-colors duration-300`}>
+              <div className={`p-3 rounded-full ${isDarkMode ? 'bg-blue-900' : 'bg-blue-100'}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${isDarkMode ? 'text-blue-300' : 'text-blue-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Gestion du calendrier</h3>
+                <p className={`mt-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Planifiez vos événements avec précision et évitez les conflits d'horaires.</p>
+              </div>
+            </div>
+            
+            <div className={`p-4 rounded-lg flex items-start space-x-4 ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-blue-50'} transition-colors duration-300`}>
+              <div className={`p-3 rounded-full ${isDarkMode ? 'bg-green-900' : 'bg-green-100'}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${isDarkMode ? 'text-green-300' : 'text-green-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Gestion des participants</h3>
+                <p className={`mt-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Restez informé en suivant attentivement les inscriptions et en découvrant le nombre total de participants inscrits.</p>
+              </div>
+            </div>
+            
+            <div className={`p-4 rounded-lg flex items-start space-x-4 ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-blue-50'} transition-colors duration-300`}>
+              <div className={`p-3 rounded-full ${isDarkMode ? 'bg-purple-900' : 'bg-purple-100'}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${isDarkMode ? 'text-purple-300' : 'text-purple-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Personnalisation complète</h3>
+                <p className={`mt-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Adaptez chaque aspect de vos événements selon vos besoins spécifiques.</p>
+              </div>
+            </div>
+            
+            <div className={`p-4 rounded-lg flex items-start space-x-4 ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-blue-50'} transition-colors duration-300`}>
+              <div className={`p-3 rounded-full ${isDarkMode ? 'bg-yellow-900' : 'bg-yellow-100'}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${isDarkMode ? 'text-yellow-300' : 'text-yellow-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Connectez-vous en un clin d'œil</h3>
+                <p className={`mt-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Si vous n'avez pas de compte, connectez-vous facilement avec votre compte Google grâce à notre fonctionnalité intégrée.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ======================== SECTION LES ÉVÉNEMENTS ======================== */}
-      <section className="container mx-auto px-4 mt-28 max-w-6xl">
+      <section className="container mx-auto px-4 mt-20 max-w-6xl">
         <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-          Les événements
+          Les événements à venir
         </h2>
         <div className="w-24 h-1 bg-blue-600 mx-auto mb-12 rounded-full"></div>
         <div className="relative">
@@ -363,82 +486,160 @@ function Home({ allEvents, isLoggedIn, setIsLoggedIn, getToken, fetchEvents }) {
         </div>
       </section>
 
-      {/* ======================== SECTION "DÉCOUVREZ TOUS LES ÉVÉNEMENTS" ======================== */}
-      <section className="container mx-auto px-4 mt-28 max-w-6xl">
-        <div className={`bg-gradient-to-r ${isDarkMode ? 'from-blue-900 to-indigo-900' : 'from-blue-600 to-indigo-700'} p-8 sm:p-16 rounded-3xl shadow-xl text-center transform transition-all duration-500 hover:shadow-2xl`}>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 animate-in">
-            Découvrez tous les événements
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-200 mb-8 animate-in max-w-2xl mx-auto">
-            Explorez des événements passionnants : conférences, concerts, ateliers et plus encore. 
-            Trouvez ce qui vous intéresse et rejoignez des expériences mémorables.
-          </p>
-          <div className="flex justify-center mt-10">
-            <Link
-              to="/AllEvent"
-              className="
-                bg-white
-                text-blue-700
-                px-6
-                sm:px-10
-                py-2
-                sm:py-4
-                rounded-full
-                text-lg
-                sm:text-2xl
-                font-semibold
-                shadow-lg
-                hover:bg-blue-50
-                hover:shadow-xl
-                transition-all
-                duration-300
-                animate-in
-                transform hover:scale-105
-              "
-            >
-              Voir tous les événements
-            </Link>
+      {/* ======================== SECTION TÉMOIGNAGES ======================== */}
+      <section className="container mx-auto px-4 mt-20 max-w-4xl">
+        <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          Ce que disent nos utilisateurs
+        </h2>
+        <div className="w-24 h-1 bg-blue-600 mx-auto mb-12 rounded-full"></div>
+        
+        <div className={`rounded-xl overflow-hidden shadow-xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'} p-6`}>
+          <Slider {...testimonialSettings}>
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="px-4 py-6">
+                <div className="flex flex-col items-center text-center">
+                  <img 
+                    src={testimonial.avatar} 
+                    alt={testimonial.name} 
+                    className="w-20 h-20 rounded-full object-cover border-4 border-blue-500 shadow-lg"
+                  />
+                  <div className="mt-4">
+                    <p className={`text-lg italic mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      "{testimonial.text}"
+                    </p>
+                    <h3 className={`font-bold text-xl ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{testimonial.name}</h3>
+                    <p className={`${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{testimonial.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </Slider>
+        </div>
+      </section>
+
+      {/* ======================== SECTION APPEL À L'ACTION ======================== */}
+      <section className="container mx-auto px-4 mt-20 max-w-6xl">
+        <div className={`rounded-2xl overflow-hidden shadow-xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'} p-8`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h2 className={`text-2xl sm:text-3xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                Prêt à créer votre événement ?
+              </h2>
+              <p className={`mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                Rejoignez des milliers d'organisateurs qui font confiance à notre plateforme pour leurs événements. 
+                Commencez dès aujourd'hui et découvrez la différence !
+              </p>
+              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                <Link
+                  to="/addEvent"
+                  className={`px-6 py-3 rounded-lg text-white font-medium text-center ${
+                    isDarkMode 
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' 
+                      : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600'
+                  } transition-all duration-300 transform hover:scale-105 shadow-lg`}
+                >
+                  Créer un événement
+                </Link>
+                <Link
+                  to="/AllEvent"
+                  className={`px-6 py-3 rounded-lg font-medium text-center ${
+                    isDarkMode 
+                      ? 'bg-gray-700 text-white hover:bg-gray-600' 
+                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                  } transition-all duration-300 transform hover:scale-105 shadow-lg`}
+                >
+                  Explorer les événements
+                </Link>
+              </div>
+            </div>
+            <div className="hidden md:block">
+              <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-gray-700' : 'bg-blue-50'}`}>
+                <div className="space-y-4">
+                  <div className="flex items-center">
+                    <div className={`p-2 rounded-full ${isDarkMode ? 'bg-blue-900' : 'bg-blue-100'} mr-4`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${isDarkMode ? 'text-blue-300' : 'text-blue-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Inscription gratuite</p>
+                  </div>
+                  <div className="flex items-center">
+                    <div className={`p-2 rounded-full ${isDarkMode ? 'bg-blue-900' : 'bg-blue-100'} mr-4`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${isDarkMode ? 'text-blue-300' : 'text-blue-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Création d'événements illimitée</p>
+                  </div>
+                  <div className="flex items-center">
+                    <div className={`p-2 rounded-full ${isDarkMode ? 'bg-blue-900' : 'bg-blue-100'} mr-4`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${isDarkMode ? 'text-blue-300' : 'text-blue-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Connexion instantanée</p>
+                  </div>
+                  <div className="flex items-center">
+                    <div className={`p-2 rounded-full ${isDarkMode ? 'bg-blue-900' : 'bg-blue-100'} mr-4`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${isDarkMode ? 'text-blue-300' : 'text-blue-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Filtrages des événements</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ======================== SECTION "CRÉER UN ÉVÉNEMENT" ======================== */}
-      <section className="container mx-auto px-4 mt-28 mb-20 max-w-4xl">
-        <div className={`text-center ${isDarkMode ? 'bg-gradient-to-r from-gray-800 to-gray-700' : 'bg-gradient-to-r from-gray-900 to-black'} p-10 rounded-xl shadow-xl transform transition-all duration-500 hover:shadow-2xl`}>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
-            Créer un événement
-          </h2>
-          <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-8 max-w-xl mx-auto">
-            Créez des événements facilement et partagez-les avec vos participants. 
-            Rejoignez notre plateforme et faites vivre des expériences uniques !
-          </p>
-          <Link
-            to="/addEvent"
-            className="
-              inline-block
-              bg-white
-              text-blue-600
-              px-6
-              py-2
-              sm:px-8
-              sm:py-4
-              rounded-full
-              text-lg
-              sm:text-xl
-              font-semibold
-              shadow-lg
-              hover:shadow-2xl
-              hover:bg-blue-600
-              hover:text-white
-              transition-all
-              duration-300
-              transform hover:scale-105
-            "
-          >
-            Créer un événement
-          </Link>
+      {/* ======================== SECTION FAQ ======================== */}
+      <section className="container mx-auto px-4 mt-20 max-w-4xl">
+        <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          Questions fréquentes
+        </h2>
+        <div className="w-24 h-1 bg-blue-600 mx-auto mb-12 rounded-full"></div>
+        
+        <div className={`rounded-xl overflow-hidden shadow-xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'} divide-y ${isDarkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
+          <div className="p-6">
+            <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              Comment créer un événement ?
+            </h3>
+            <p className={`mt-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              Pour créer un événement, connectez-vous à votre compte, cliquez sur "Créer un événement" et suivez les instructions. Vous pourrez ajouter tous les détails nécessaires comme le titre, la date, le lieu et une description.
+            </p>
+          </div>
+          
+          <div className="p-6">
+            <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              Comment s'inscrire à un événement ?
+            </h3>
+            <p className={`mt-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              Parcourez les événements disponibles, sélectionnez celui qui vous intéresse et cliquez sur "Participer". Vous recevrez une confirmation par email avec tous les détails.
+            </p>
+          </div>
+          
+          <div className="p-6">
+            <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              Est-ce que je peux modifier mon événement après sa création ?
+            </h3>
+            <p className={`mt-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              Oui, vous pouvez modifier les détails de votre événement à tout moment. Accédez à votre tableau de bord, trouvez l'événement concerné et cliquez sur "Modifier".
+            </p>
+          </div>
+          
+          <div className="p-6">
+            <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              Comment annuler ma participation à un événement ?
+            </h3>
+            <p className={`mt-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              Vous pouvez annuler votre participation en accédant à votre profil, en sélectionnant l'événement et en cliquant sur "Se désinscrire". L'organisateur sera automatiquement informé.
+            </p>
+          </div>
         </div>
       </section>
+
     </div>
   );
 }
