@@ -27,7 +27,7 @@ function UserProtectedRoute({ element, redirectTo = "/login" }) {
 
     const checkAuth = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3002/api/checkAuth", {
+        const { data } = await axios.get("https://projet-b3.onrender.com/api/checkAuth", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -71,7 +71,7 @@ function AdminProtectedRoute({ element, redirectTo = "/adminLogin" }) {
 
     const checkAuth = async () => {
       try {
-        const response = await axios.get("http://localhost:3002/api/checkAuth", {
+        const response = await axios.get("https://projet-b3.onrender.com/api/checkAuth", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
