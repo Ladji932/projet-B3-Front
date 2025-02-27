@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { HashRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react'; 
 import Header from './components/Header';
 import Home from './components/Home';
@@ -104,7 +104,7 @@ function Root() {
   const declineCookies = () => setCookiesAccepted(true);
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div>
         <Header isLoggedIn={!!getToken()} setIsLoggedIn={setIsLoggedIn} allEvents={AllEvents} />
         <Routes>
@@ -152,7 +152,7 @@ function Root() {
           </div>
         )}
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
