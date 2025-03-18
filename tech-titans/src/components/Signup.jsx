@@ -42,74 +42,139 @@ function Signup() {
   };
 
   return (
-    <div className={isDarkMode ? 'bg-gray-900 text-white flex items-center justify-center min-h-screen' : 'bg-gray-50 text-black flex items-center justify-center min-h-screen'}>
-      <div className={isDarkMode ? 'bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md' : 'bg-white p-8 rounded-lg shadow-lg w-full max-w-md border border-gray-300'}>
-        <h1 className="text-3xl font-semibold text-center text-indigo-600 mb-6">Inscription</h1>
+    <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-200 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+      <div className={`max-w-md w-full space-y-8 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} p-10 rounded-xl shadow-2xl transform transition-all duration-300 hover:scale-[1.02]`}>
+        <div>
+          <h1 className={`text-center text-3xl font-extrabold ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-2`}>
+            Inscription
+          </h1>
+          <p className={`text-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Créez votre compte pour commencer
+          </p>
+        </div>
+
         {message && (
-          <div className={`mb-4 text-center ${success ? 'text-green-600' : 'text-red-600'}`}>{message}</div>
+          <div className={`rounded-md p-4 ${success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+            <p className="text-sm text-center">{message}</p>
+          </div>
         )}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <input
-              type="text"
-              name="login"
-              placeholder="Nom d'utilisateur"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className={isDarkMode ? 'w-full p-4 border border-gray-600 rounded-md bg-gray-700 text-white shadow-md' : 'w-full p-4 border border-gray-300 rounded-md bg-gray-100 shadow-md'}
-              required
-            />
+
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="username" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Nom d'utilisateur
+              </label>
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className={`mt-1 block w-full px-4 py-3 rounded-lg text-sm transition duration-200 ease-in-out focus:ring-2 focus:ring-offset-2 ${
+                  isDarkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white focus:ring-indigo-500 focus:border-indigo-500' 
+                    : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'
+                }`}
+                placeholder="Entrez votre nom d'utilisateur"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="email" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Adresse email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`mt-1 block w-full px-4 py-3 rounded-lg text-sm transition duration-200 ease-in-out focus:ring-2 focus:ring-offset-2 ${
+                  isDarkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white focus:ring-indigo-500 focus:border-indigo-500' 
+                    : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'
+                }`}
+                placeholder="exemple@email.com"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Mot de passe
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`mt-1 block w-full px-4 py-3 rounded-lg text-sm transition duration-200 ease-in-out focus:ring-2 focus:ring-offset-2 ${
+                    isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white focus:ring-indigo-500 focus:border-indigo-500' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'
+                  }`}
+                  placeholder="••••••••"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={`absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium transition-colors duration-200 ${
+                    isDarkMode 
+                      ? 'text-gray-400 hover:text-gray-300' 
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  {showPassword ? 'Masquer' : 'Afficher'}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="confirmPassword" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Confirmer le mot de passe
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className={`mt-1 block w-full px-4 py-3 rounded-lg text-sm transition duration-200 ease-in-out focus:ring-2 focus:ring-offset-2 ${
+                  isDarkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white focus:ring-indigo-500 focus:border-indigo-500' 
+                    : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'
+                }`}
+                placeholder="••••••••"
+                required
+              />
+            </div>
           </div>
-          <div className="mb-4">
-            <input
-              type="email"
-              name="mail"
-              placeholder="Adresse mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={isDarkMode ? 'w-full p-4 border border-gray-600 rounded-md bg-gray-700 text-white shadow-md' : 'w-full p-4 border border-gray-300 rounded-md bg-gray-100 shadow-md'}
-              required
-            />
-          </div>
-          <div className="mb-4 relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Mot de passe"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={isDarkMode ? 'w-full p-4 border border-gray-600 rounded-md bg-gray-700 text-white shadow-md' : 'w-full p-4 border border-gray-300 rounded-md bg-gray-100 shadow-md'}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-3 text-gray-500 focus:outline-none"
-            >
-              {showPassword ? 'Masquer' : 'Afficher'}
-            </button>
-          </div>
-          <div className="mb-4">
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirmez le mot de passe"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className={isDarkMode ? 'w-full p-4 border border-gray-600 rounded-md bg-gray-700 text-white shadow-md' : 'w-full p-4 border border-gray-300 rounded-md bg-gray-100 shadow-md'}
-              required
-            />
-          </div>
+
           <button
             type="submit"
-            className={isDarkMode ? 'w-full bg-indigo-600 text-white p-4 rounded-md hover:bg-indigo-500 shadow-md' : 'w-full bg-indigo-600 text-white p-4 rounded-md hover:bg-indigo-700 shadow-md'}
+            className={`w-full flex justify-center py-3 px-4 rounded-lg text-sm font-semibold text-white transition duration-200 ease-in-out transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+              isDarkMode
+                ? 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
+                : 'bg-indigo-500 hover:bg-indigo-600 focus:ring-indigo-500'
+            }`}
           >
-            Envoyer
+            S'inscrire
           </button>
         </form>
-        <Link to="/connexion" className={isDarkMode ? 'text-gray-300 px-4 py-2 hover:underline' : 'text-gray-800 px-4 py-2 hover:underline'}>
-          Vous avez déjà un compte ? Connectez-vous
-        </Link>
+
+        <div className="mt-6 text-center">
+          <Link 
+            to="/connexion" 
+            className={`text-sm font-medium transition duration-200 ease-in-out ${
+              isDarkMode 
+                ? 'text-indigo-400 hover:text-indigo-300' 
+                : 'text-indigo-600 hover:text-indigo-500'
+            }`}
+          >
+            Vous avez déjà un compte ? Connectez-vous
+          </Link>
+        </div>
       </div>
     </div>
   );

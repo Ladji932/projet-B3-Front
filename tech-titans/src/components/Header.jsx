@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IoIosMenu, IoIosClose } from "react-icons/io";
-import { useTheme } from '../ThemeContext'; // Ajustez le chemin selon votre structure de dossiers
+import { useTheme } from '../ThemeContext';
 
 function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
-  const { isDarkMode, toggleDarkMode } = useTheme(); // Utiliser le contexte
+  const { isDarkMode, toggleDarkMode } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -45,95 +45,192 @@ function Header({ isLoggedIn, setIsLoggedIn, allEvents }) {
   };
 
   return (
-    <nav className={`w-full px-4 py-4 overflow-x-hidden ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
-      <div className="flex items-center justify-between w-full">
-        <div className="flex items-center space-x-12">
-          <Link to="/" className="blockNav1">
-            <h2 className="font-bold text-2xl sm:text-3xl">Event Ease</h2>
+    <nav className={`w-full px-4 py-4 px-4 py-4 shadow-lg transition-colors duration-300 ${
+      isDarkMode 
+        ? 'bg-gray-900 text-white border-b border-gray-800' 
+        : 'bg-white text-gray-900 border-b border-gray-100'
+    }`}>
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="flex items-center gap-8">
+          <Link 
+            to="/" 
+            className="transform transition-transform duration-300 hover:scale-105"
+          >
+            <h2 className="font-bold text-2xl sm:text-3xl bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent">
+              Event Ease
+            </h2>
           </Link>
 
-          <form onSubmit={handleSearch} className="hidden lg:flex w-full max-w-[400px] space-x-2">
-            <input
-              type="text"
-              className={`flex-grow min-w-0 border rounded-l-lg px-3 py-2 text-sm sm:text-base ${isDarkMode ? 'border-gray-700 bg-gray-800 text-white' : 'border-gray-300 bg-white text-black'}`}
-              placeholder="Rechercher..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+          <form onSubmit={handleSearch} className="hidden lg:flex items-center max-w-xl flex-1">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                className={`w-full rounded-l-lg pl-4 pr-10 py-2.5 text-sm transition-colors duration-200 focus:outline-none focus:ring-2 ${
+                  isDarkMode 
+                    ? 'bg-gray-800 border-gray-700 text-white focus:ring-blue-500' 
+                    : 'bg-gray-50 border-gray-200 text-gray-900 focus:ring-blue-500'
+                }`}
+                placeholder="Rechercher un événement..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
             <button
               type="submit"
-              className={`whitespace-nowrap rounded-r-lg px-3 sm:px-4 py-2 text-sm sm:text-base transition-colors duration-300 flex-shrink-0 ${isDarkMode ? 'bg-gray-700 text-white hover:bg-blue-600' : 'bg-gray-800 text-white hover:bg-blue-600'}`}
+              className="px-6 py-2.5 bg-blue-600 text-white rounded-r-lg text-sm font-medium transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Rechercher
             </button>
           </form>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <button onClick={toggleDarkMode} className="text-xl">
-            {isDarkMode ? '🌞' : '🌙'}
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={toggleDarkMode}
+            className="p-2 rounded-full transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+            aria-label={isDarkMode ? "Activer le mode clair" : "Activer le mode sombre"}
+          >
+            <span className="text-xl">{isDarkMode ? '🌞' : '🌙'}</span>
           </button>
-          <div className="hidden lg:flex items-center space-x-4">
-            {isLoggedIn && (
-              <Link to="/userDetails" className="bg-blue-500 text-white rounded-lg px-4 py-2">
-                Page utilisateur
-              </Link>
-            )}
-            <Link to="/AllEvent" className="bg-gray-800 text-white rounded-lg px-4 py-2">
+
+          <div className="hidden lg:flex items-center gap-3">
+            <Link 
+              to="/AllEvent"
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 bg-blue-600 text-white hover:bg-blue-700"
+            >
               Les événements
             </Link>
+
             {isLoggedIn ? (
-              <button onClick={handleLogout} className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600">
-                Déconnexion
-              </button>
+              <>
+                <Link 
+                  to="/userDetails"
+                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 bg-indigo-600 text-white hover:bg-indigo-700"
+                >
+                  Page utilisateur
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 bg-red-600 text-white hover:bg-red-700"
+                >
+                  Déconnexion
+                </button>
+              </>
             ) : (
               <>
-                <Link to="/login" className="bg-gray-800 text-white rounded-lg px-4 py-2">
+                <Link 
+                  to="/login"
+                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 bg-indigo-600 text-white hover:bg-indigo-700"
+                >
                   Connexion
                 </Link>
-                <Link to="/inscription" className="bg-gray-800 text-white rounded-lg px-4 py-2">
+                <Link 
+                  to="/inscription"
+                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 bg-blue-600 text-white hover:bg-blue-700"
+                >
                   Inscription
                 </Link>
               </>
             )}
           </div>
 
-          <button className="lg:hidden text-3xl" onClick={toggleMenu}>
-            <IoIosMenu />
+          <button 
+            onClick={toggleMenu}
+            className="lg:hidden p-2 rounded-lg transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+            aria-label="Menu"
+          >
+            {isMenuOpen ? <IoIosClose size={28} /> : <IoIosMenu size={28} />}
           </button>
         </div>
       </div>
 
-      <div className={`fixed top-0 right-0 w-48 h-64 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'} shadow-2xl rounded-l-xl transform transition-transform duration-300 z-50 lg:hidden ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
-        <button onClick={toggleMenu} className="absolute top-2 right-2 text-2xl focus:outline-none">
-          <IoIosClose className="hover:text-gray-300" />
-        </button>
-        <div className="mt-12 flex flex-col items-center space-y-4 px-2">
-          {isLoggedIn && (
-            <Link to="/userDetails" onClick={toggleMenu} className="w-full text-center bg-white text-black font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm">
-              Page utilisateur
+      {/* Mobile Menu */}
+      <div 
+        className={`fixed inset-y-0 right-0 w-64 ${
+          isDarkMode ? 'bg-gray-800' : 'bg-white'
+        } shadow-2xl transform transition-transform duration-300 ease-in-out lg:hidden ${
+          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex flex-col h-full pt-16 pb-6 px-4">
+          <form onSubmit={handleSearch} className="mb-6">
+            <input
+              type="text"
+              className={`w-full px-4 py-2 rounded-lg text-sm transition-colors duration-200 ${
+                isDarkMode 
+                  ? 'bg-gray-700 text-white placeholder-gray-400' 
+                  : 'bg-gray-50 text-gray-900 placeholder-gray-500'
+              }`}
+              placeholder="Rechercher..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </form>
+
+          <div className="flex flex-col gap-3">
+            {isLoggedIn && (
+              <Link
+                to="/userDetails"
+                onClick={toggleMenu}
+                className={`w-full px-4 py-2.5 rounded-lg text-sm font-medium text-center transition-colors duration-200 ${
+                  isDarkMode
+                    ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                }`}
+              >
+                Page utilisateur
+              </Link>
+            )}
+            
+            <Link
+              to="/AllEvent"
+              onClick={toggleMenu}
+              className={`w-full px-4 py-2.5 rounded-lg text-sm font-medium text-center transition-colors duration-200 ${
+                isDarkMode
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
+            >
+              Les événements
             </Link>
-          )}
-          <Link to="/" onClick={toggleMenu} className="w-full text-center bg-white text-blue-500 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm">
-            Accueil
-          </Link>
-          <Link to="/AllEvent" onClick={toggleMenu} className="w-full text-center bg-white text-blue-500 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm">
-            Les événements
-          </Link>
-          {isLoggedIn ? (
-            <button onClick={() => { handleLogout(); toggleMenu(); }} className="w-full text-center bg-red-600 text-white font-semibold rounded-full px-2 py-1 shadow hover:bg-red-700 transition text-sm">
-              Déconnexion
-            </button>
-          ) : (
-            <>
-              <Link to="/login" onClick={toggleMenu} className="w-full text-center bg-white text-blue-500 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm">
-                Connexion
-              </Link>
-              <Link to="/inscription" onClick={toggleMenu} className="w-full text-center bg-white text-blue-500 font-semibold rounded-full px-2 py-1 shadow hover:bg-gray-200 transition text-sm">
-                Inscription
-              </Link>
-            </>
-          )}
+
+            {isLoggedIn ? (
+              <button
+                onClick={() => {
+                  handleLogout();
+                  toggleMenu();
+                }}
+                className="w-full px-4 py-2.5 rounded-lg text-sm font-medium text-center bg-red-600 text-white transition-colors duration-200 hover:bg-red-700"
+              >
+                Déconnexion
+              </button>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={toggleMenu}
+                  className={`w-full px-4 py-2.5 rounded-lg text-sm font-medium text-center transition-colors duration-200 ${
+                    isDarkMode
+                      ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                      : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                  }`}
+                >
+                  Connexion
+                </Link>
+                <Link
+                  to="/inscription"
+                  onClick={toggleMenu}
+                  className={`w-full px-4 py-2.5 rounded-lg text-sm font-medium text-center transition-colors duration-200 ${
+                    isDarkMode
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                  }`}
+                >
+                  Inscription
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </nav>

@@ -19,6 +19,7 @@ import GestionCookies from './components/GestionCookies';
 import Footer from './components/Footer';
 
 
+
 function UserProtectedRoute({ element, redirectTo = "/login" }) {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
